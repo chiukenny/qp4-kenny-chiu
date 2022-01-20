@@ -1,0 +1,58 @@
+\documentclass[10pt]{article}
+\input{../document/report/header}
+\input{../document/report/defs}
+
+
+\begin{document}
+
+\tableofcontents
+
+
+\newpage
+
+
+\section{Optimal Iterative Sketching with the Subsampled Randomized Hadamard Transform}
+
+Based on \citep{Lacotte:2020}.
+\\
+
+The performance of iterative Hessian sketch (IHS) has only been studied empirically in existing literature. \citet{Lacotte:2020} show that for IHS with random matrices projected via refreshed (\iid) truncated Haar matrices or subsampled randomized Hadamard transform (SRHT), the limiting rate of convergence is expected to be better than that of IHS with Gaussian random projections. Their other theoretical contributions include a closed form optimal (limiting) step size for IHS with Haar sketches, showing that momentum does not improve performance of IHS with refreshed Haar sketches, and an explicit formula for the second inverse moment of Haar sketches.
+
+\subsection{Background}
+
+\subsubsection{Problem and method}
+
+Consider overdetermined least-squares problems of the form
+\[
+\bfb^* = \argmin_{\bfb\in\bbR^d}\left\{f(\bfb) = \frac{1}{2}\|\bfX\bfb-\bfy\|^2\right\}
+\]
+where $\bfX\in\bbR^{n\times d}$ is a given data matrix with $n\geq d$ and $\mathrm{rank}(\bfX)=d$ and $\bfy\in\bbR^n$ is a vector of observations. Iterative Hessian sketch is one iterative method for solving the problem where given step sizes $\{\alpha_t\}$ and momentum $\{\beta_t\}$, the solutions are iteratively updated by
+\[
+\bfb_{t+1} = \bfb_t - \alpha_tH_t^{-1}\nabla f(\bfb_t)+\beta_t(\bfb_t-\bfb_{t-1}) \;.
+\]
+The matrix $H_t$ is an approximation of the Hessian $H=\bfX^\T\bfX$ and is given by $H_t=\bfX^\T \bfS_t^\T \bfS_t\bfX$ where $\bfS_0,\ldots,\bfS_t,\ldots$ are refreshed (\iid) $m\times n$ sketching (random) matrices with $m\ll n$. The types of sketches discussed by \citet{Lacotte:2020} include
+\begin{enumerate}
+
+\item
+Gaussian sketches where $(\bfS_t)_{ij}\overset{\text{\iid}}{\sim} N(0,m^{-1})$. Computing the matrix product $\bfS\bfX$ is $O(mnd)$ in general, which is larger than the cost of $O(nd^2)$ for direct method solvers when $m\geq d$.
+
+\item
+truncated Haar sketches using Haar matrices $\bfS_t$ where the rows are orthonormal (\todo: other qualifications? Truncated?). Generating the matrix requires $O(nm^2)$ using a Gram-Schmidt procedure which is larger than $O(nd^2)$.
+
+\item
+subsampled randomized Hadamard transform where the sketch $\bfS\bfX$ can be obtained in $O(nd\log m)$ time. Like other orthogonal embeddings, the performance tends to be better than random projections with \iid entries.
+
+\end{enumerate}
+
+
+\subsubsection{Random matrix theory}
+
+Let $\{\bfM_n\}_n$ be a sequence of $n\times n$ Hermitian random matrices. The empirical spectral distribution (\esd) of $\bfM_n$ is the CDF of its eigenvalues $\lambda_1,\ldots,\lambda_n$ given by $F_{\bfM_n}(x)=\frac{1}{n}\sum_{j=1}^n\mathbbm{1}[\lambda_j\leq x]$ for $x\in\bbR$. The eigenvalues are random and so $F_{\bfM_n}$ is also random. \todo
+
+
+\newpage
+
+\bibliographystyle{plainnat}
+\bibliography{../references/qp}
+
+\end{document}
