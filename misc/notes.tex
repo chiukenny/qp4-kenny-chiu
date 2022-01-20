@@ -45,9 +45,80 @@ subsampled randomized Hadamard transform where the sketch $\bfS\bfX$ can be obta
 \end{enumerate}
 
 
-\subsubsection{Random matrix theory}
+\subsubsection{Random matrix theory and tools}
 
-Let $\{\bfM_n\}_n$ be a sequence of $n\times n$ Hermitian random matrices. The empirical spectral distribution (\esd) of $\bfM_n$ is the CDF of its eigenvalues $\lambda_1,\ldots,\lambda_n$ given by $F_{\bfM_n}(x)=\frac{1}{n}\sum_{j=1}^n\mathbbm{1}[\lambda_j\leq x]$ for $x\in\bbR$. The eigenvalues are random and so $F_{\bfM_n}$ is also random. \todo
+Let $\{\bfM_n\}_n$ be a sequence of $n\times n$ Hermitian random matrices. The empirical spectral distribution (\esd) of $\bfM_n$ is the CDF of its eigenvalues $\lambda_1,\ldots,\lambda_n$ given by $F_{\bfM_n}(x)=\frac{1}{n}\sum_{j=1}^n\mathbbm{1}[\lambda_j\leq x]$ for $x\in\bbR$. The eigenvalues are random and so $F_{\bfM_n}$ is also random. The \esd $F_{\bfM_n}$ converges weakly to the limiting spectral distribution (\lsd) of $\bfM_n$ as $n\rightarrow\infty$.
+\\
+
+For a probability measure $\mu$ with support on $[0,\infty)$, its Stieltjes transform is defined over the complex space complementary to the support of $\mu$ as
+\[
+m_\mu(z) = \int \frac{1}{x-z}\mu(dx) \;.
+\]
+The $S$-transform of $\mu$ is unique under certain conditions and is defined as the solution to the equation
+\[
+m_\mu\left(\frac{z+1}{zS_\mu(z)}\right) + zS_\mu(z) = 0\;.
+\]
+
+The Marchenko-Pastur theorem says that for a $m\times d$ matrix $\bfS$ where $(\bfS)_{ij}\overset{\text{\iid}}{\sim}N(0,m^{-1})$, then as $m,d\rightarrow\infty$ with $\frac{m}{d}\rightarrow\rho\in(0,1)$, $\bfS^\T\bfS$ has \lsd $F_\rho$ with a Stieltjes transform that is the unique solution of a certain fixed point equation and with a density given by
+\[
+\mu_\rho(x) = \frac{\sqrt{(1+\sqrt{\rho})^2-x)_+(x-(1-\sqrt{\rho})^2)_+}}{2\pi\rho x}
+\]
+where $y_+=\max\{0,y\}$.
+
+
+\subsubsection{Other notation}
+
+Define the aspect ratios $\gamma = \lim_{n,d\rightarrow\infty}\frac{d}{n}\in(0,1)$, $\xi = \lim_{n,m\rightarrow\infty}\frac{m}{n}\in(\gamma,1)$ and $\rho_g=\frac{\gamma}{\xi}\in(0,1)$ where subscript $g$ refers to Gaussians and $h$ refers to Haar or Hadamard. For a sequence $\{\bfb_t\}$, denote the error vector $\Delta_t = \bfU^\T\bfX(\bfb_t-\bfb^*)$ where $\bfU$ is the $n\times d$ matrix of left singular vectors of $\bfX$. Note that $\|\Delta_t\|^2 = \|\bfX(\bfb_t-\bfb^*)\|^2$.
+
+
+\subsection{Sketching with Haar matrices}
+
+Theorem~3.1 (Optimal IHS with Haar sketches): for refreshed Haar matrices $\{\bfS_t\}$, step sizes $\alpha_t=\frac{\theta_{1,h}}{\theta_{2,h}}$ (defined in Lemma~3.2) and momentum parameters $\beta_t=0$, the sequence of error vectors $\{\Delta_t\}$ satisfies
+\[
+\rho_h = \left(\lim_{n\rightarrow\infty}\frac{\E\|\Delta_t\|^2}{\|\Delta_0\|^2}\right)^\frac{1}{t} = \rho_g\cdot\frac{\xi(1-\xi)}{\gamma^2+\xi-2\xi\gamma} \;.
+\]
+For any step sizes $\{a_t\}$ and momentum parameters $\{\beta_t\}$,
+\[
+\rho_h \leq \liminf_{t\rightarrow\infty}\left(\lim_{n\rightarrow\infty}\frac{\E\|\Delta_t\|^2}{\|\Delta_0\|^2}\right)^\frac{1}{t} \;,
+\]
+i.e., $\rho_h$ is the optimal rate for Haar embeddings.
+\\
+
+Theorem~3.1 says that using the optimal parameters (which has closed forms), the rate at any time step $t\geq1$ is given by
+\[
+\rho_h^t = \lim_{n\rightarrow\infty}\frac{\E\|\Delta_t\|^2}{\|\Delta_0\|^2}
+\]
+with $\rho_h<\rho_g$. Momentum also does not provide benefits.
+\\
+
+Lemma~3.2 (First two inverse moments of Haar sketches): let $\bfS$ be a $m\times n$ Haar matrix, $\bfU$ a $n\times d$ deterministic matrix with orthonormal columns. Then
+\begin{align*}
+\theta_{1,h} &= \lim_{n\rightarrow\infty} \frac{1}{d} \mathrm{trace}\left(\E\left[(\bfU^\T\bfS^\T\bfS\bfU)^{-1}\right]\right) = \frac{1-\gamma}{\xi-\gamma} \\
+\theta_{2,h} &= \lim_{n\rightarrow\infty} \frac{1}{d} \mathrm{trace}\left(\E\left[(\bfU^\T\bfS^\T\bfS\bfU)^{-2}\right]\right) = \frac{(1-\gamma)(\gamma^2+\xi-2\gamma\xi)}{(\xi-\gamma)^3}
+\end{align*}
+(Note that $\theta_{i,h}$ is the average of the eigenvalues of $\bfU^\T\bfS^\T\bfS\bfU$ to the power of $-i$.)
+\\
+
+\citet{Lacotte:2020} show that as the sketch size $m$ increases relative to $n$, the convergence ratio of Haar sketches versus Gaussian projections scales as $\frac{\rho_h}{\rho_g}\approx (1-\xi)$.
+
+
+\subsection{Sketching with SRHT matrices}
+
+\citet{Lacotte:2020} consider a version of SRHT where the transform $\bfX\mapsto\bfS\bfX$ first randomly permutes the rows of $\bfX$ before applying the classical transform, i.e., $\bfS=\frac{1}{\sqrt{n}}\bfB\bfH_n\bfD\bfP$ where $\bfB$ is a $n\times n$ diagonal matrix of \iid Bernoulli random variables with success probability $\frac{m}{n}$, $\bfD$ is a $n\times n$ diagonal matrix of \iid sign random variables with uniform probability, and $\bfP$ is a $n\times n$ uniformly distributed permutation matrix. $\bfH_n$ is the $n\times n$ Walsh-Hadamard matrix where for $n=2^p$ for $p\geq1$, the matrix is defined recursively as
+\[
+\bfH_n = \begin{bmatrix}
+\bfH_\frac{n}{2} & \bfH_\frac{n}{2} \\
+\bfH_\frac{n}{2} & -\bfH_\frac{n}{2}
+\end{bmatrix}
+\]
+with $\bfH_1=1$. Before applying the transformation to $\bfX$, the zero rows of $\bfS$ are discarded and so $\bfS$ is a $M\times n$ orthogonal matrix with $M\sim\mathrm{Binomial}(\frac{m}{n},n)$, and $\frac{M}{n}\rightarrow\xi$ as $n\rightarrow\infty$. Note that $\bfS$ is still referred to as a $m\times n$ SRHT matrix.
+\\
+
+Theorem~4.1 (IHS with SRHT sketches). Suppose that $\bfb_0$ is random and that the error vector $\Delta_0$ satisfies $\E\left[\Delta_0\Delta_0^\T\right]=d^{-1}\bfI_d$. Then for refreshed SRHT matrices $\{\bfS_t\}$, step sizes $\alpha_t=\frac{\theta_{1,h}}{\theta_{2,h}}$ and momentum parameters $\beta_t=0$,  the sequence $\{\Delta_t\}$ satisfies
+\[
+\rho_s = \left(\lim_{n\rightarrow\infty}\frac{\E\left[\|\Delta_t\|^2\right]}{\E\left[\|\Delta_0\|^2\right]}\right)^\frac{1}{t} = \rho_g \cdot \frac{\xi(1-\xi)}{\gamma^2+\xi-2\xi\gamma} = \rho_h \;.
+\]
+\todo
 
 
 \newpage
