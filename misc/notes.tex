@@ -114,11 +114,44 @@ Lemma~3.2 (First two inverse moments of Haar sketches): let $\bfS$ be a $m\times
 with $\bfH_1=1$. Before applying the transformation to $\bfX$, the zero rows of $\bfS$ are discarded and so $\bfS$ is a $M\times n$ orthogonal matrix with $M\sim\mathrm{Binomial}(\frac{m}{n},n)$, and $\frac{M}{n}\rightarrow\xi$ as $n\rightarrow\infty$. Note that $\bfS$ is still referred to as a $m\times n$ SRHT matrix.
 \\
 
-Theorem~4.1 (IHS with SRHT sketches). Suppose that $\bfb_0$ is random and that the error vector $\Delta_0$ satisfies $\E\left[\Delta_0\Delta_0^\T\right]=d^{-1}\bfI_d$. Then for refreshed SRHT matrices $\{\bfS_t\}$, step sizes $\alpha_t=\frac{\theta_{1,h}}{\theta_{2,h}}$ and momentum parameters $\beta_t=0$,  the sequence $\{\Delta_t\}$ satisfies
+Theorem~4.1 (IHS with SRHT sketches): suppose that $\bfb_0$ is random and that the error vector $\Delta_0$ satisfies $\E\left[\Delta_0\Delta_0^\T\right]=d^{-1}\bfI_d$. Then for refreshed SRHT matrices $\{\bfS_t\}$, step sizes $\alpha_t=\frac{\theta_{1,h}}{\theta_{2,h}}$ and momentum parameters $\beta_t=0$,  the sequence $\{\Delta_t\}$ satisfies
 \[
 \rho_s = \left(\lim_{n\rightarrow\infty}\frac{\E\left[\|\Delta_t\|^2\right]}{\E\left[\|\Delta_0\|^2\right]}\right)^\frac{1}{t} = \rho_g \cdot \frac{\xi(1-\xi)}{\gamma^2+\xi-2\xi\gamma} = \rho_h \;.
 \]
-\todo
+
+The additional initialization condition can be satisfied by picking $\bfb_0$ uniformly from the unit $d$-sphere $\bfS^{d-1}$ and applying a random signed permutation and scaling to the columns of $\bfX$ (\todo). The case of general $\Delta_0$ or momentum $\beta_t\neq 0$ has not yet been explored.
+\\
+
+Theorem~4.2 (Upper bound of SRHT error): for any $\bfb_0$ with refreshed SRHT matrices $\{\bfS_t\}$, step sizes $\alpha_t=\frac{\theta_{1,h}}{\theta_{2,h}}$ and momentum parameters $\beta_t=0$, the sequence of error vectors $\{\Delta_t\}$ satisfies
+\[
+\limsup_{n\rightarrow\infty} \left(\frac{\E\left[\|\Delta_t\|\right]^2}{d\E\left[\|\Delta_0\|\right]^2}\right)^\frac{1}{t} \leq \rho_h \;.
+\]
+(Weaker by a factor of $d$, but is negligible for large $t$.)
+\\
+
+Lemma~4.3 (First two inverse moments of SRHT sketches): let $\bfS$ be a $m\times n$ SRHT matrix, $\bfS_h$ a $m\times n$ Haar matrix and $\bfU$ a $n\times d$ deterministic matrix with orthonormal columns. Then $\bfU^\T\bfS^\T\bfS\bfU$ and $\bfU^\T\bfS_h^T\bfS_h\bfU$ have the same limiting spectral distribution and therefore the same two inverse moments.
+
+
+\subsection{Complexity analysis}
+
+\citet{Lacotte:2020} compare the (asymptotic) complexity of IHS with SRHT embeddings to that of the standard pre-conditioned conjugate gradient method. The latter uses a sketch $\bfS\bfX$ to compute a pre-conditioning matrix $\bfP$ such that $\bfX\bfP^{-1}$ has a small condition number and solves the least squares problem $\min_\bfb\|\bfX\bfP^{-1}\bfb-\bfy\|^2$. The sketch size is prescribed to be $m\approx d\log d$, and the complexity to achieve $\|\Delta_t\|^2\leq \epsilon$ scales as $C_c\asymp nd\log d+d^3\log d+nd\log\varepsilon^{-1}$ (cost of forming $\bfS\bfX$, factoring, and per-iteration cost times number of iterations, respectively). For IHS with SRHT, we can take $m\approx d$ which results in complexity $C_n\asymp (nd\log d+d^3+nd)\log\varepsilon^{-1}$. Treating $\log\varepsilon^{-1}$ as constant independent of the dimensions, $\frac{C_n}{C_c}\asymp \frac{1}{\log d}$ as $n,m,d\rightarrow\infty$.
+
+
+\subsection{Numerical simulations}
+
+The main results of the numerical simulations by \citet{Lacotte:2020} (involving ill-conditioned matrices) include:
+\begin{itemize}
+
+\item
+IHS with refreshed Haar/SRHT embeddings (using optimal step size from Theorem~4.1 and finite sample approximations of $\xi$ and $\gamma$) converge faster than IHS with refreshed Gaussian embeddings (using parameters $\alpha_t$ and $\beta_t$ derived from previous work).
+
+\item
+Haar embeddings and SRHT embeddings perform similarly (though SRHT has a computational advantage).
+
+\item
+IHS with refreshed SRHT embeddings every iteration converge faster than the pre-conditioned conjugate gradient method. IHS with sketches refreshed at lower frequencies converge slower.
+
+\end{itemize}
 
 
 \newpage
