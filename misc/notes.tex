@@ -50,7 +50,7 @@ subsampled randomized Hadamard transform where the sketch $\bfS\bfX$ can be obta
 Let $\{\bfM_n\}_n$ be a sequence of $n\times n$ Hermitian random matrices. The empirical spectral distribution (\esd) of $\bfM_n$ is the CDF of its eigenvalues $\lambda_1,\ldots,\lambda_n$ given by $F_{\bfM_n}(x)=\frac{1}{n}\sum_{j=1}^n\mathbbm{1}[\lambda_j\leq x]$ for $x\in\bbR$. The eigenvalues are random and so $F_{\bfM_n}$ is also random. The \esd $F_{\bfM_n}$ converges weakly to the limiting spectral distribution (\lsd) of $\bfM_n$ as $n\rightarrow\infty$.
 \\
 
-For a probability measure $\mu$ with support on $[0,\infty)$, its Stieltjes transform is defined over the complex space complementary to the support of $\mu$ as
+For a probability measure $\mu$ with support on $[0,\infty)$, its Stieltjes transform is defined over the complex space of $z$ outside the support of $\mu$ as
 \[
 m_\mu(z) = \int \frac{1}{x-z}\mu(dx) \;.
 \]
@@ -58,12 +58,23 @@ The $S$-transform of $\mu$ is unique under certain conditions and is defined as 
 \[
 m_\mu\left(\frac{z+1}{zS_\mu(z)}\right) + zS_\mu(z) = 0\;.
 \]
+The $\eta$-transform is an alternative form of the Stieltjes transform defined for $z\in\bbC\backslash\bbR^-$ and given by
+\[
+\eta_\mu(z) = \int\frac{1}{1+zx}\mu(dx) = \frac{1}{z}m_\mu\left(-\frac{1}{z}\right) \;.
+\]
 
 The Marchenko-Pastur theorem says that for a $m\times d$ matrix $\bfS$ where $(\bfS)_{ij}\overset{\text{\iid}}{\sim}N(0,m^{-1})$, then as $m,d\rightarrow\infty$ with $\frac{m}{d}\rightarrow\rho\in(0,1)$, $\bfS^\T\bfS$ has \lsd $F_\rho$ with a Stieltjes transform that is the unique solution of a certain fixed point equation and with a density given by
 \[
 \mu_\rho(x) = \frac{\sqrt{(1+\sqrt{\rho})^2-x)_+(x-(1-\sqrt{\rho})^2)_+}}{2\pi\rho x}
 \]
 where $y_+=\max\{0,y\}$.
+\\
+
+For a random matrix $\bfX_n$ in algebra $\calA_n$ of $n\times n$ matrices, the normalized trace operator
+\[
+\tau_n(\bfX_n) = \frac{1}{n}\E\left[\mathrm{trace}(\bfX_n)\right]
+\]
+is a linear functional (and is analogous to expectations with scalar random variables; see Terry Tao's notes on free probability).
 
 
 \subsubsection{Other notation}
@@ -152,6 +163,70 @@ Haar embeddings and SRHT embeddings perform similarly (though SRHT has a computa
 IHS with refreshed SRHT embeddings every iteration converge faster than the pre-conditioned conjugate gradient method. IHS with sketches refreshed at lower frequencies converge slower.
 
 \end{itemize}
+
+
+\subsection{Appendix}
+
+\subsubsection{B.2}
+
+\begin{itemize}
+
+\item
+Distribution $F_\gamma$ with density $\gamma\delta_1+(1-\gamma)\delta_0$
+
+\item
+Distribution $F_\xi$ with density $\xi\delta_1+(1-\xi)\delta_0$
+
+\item
+System of equations
+\begin{align*}
+\eta_C(z) &= \int \frac{1}{z\gamma(z)x+1}F_\xi(dx) \\
+&= \frac{\xi}{z\gamma(z)+1} + 1-\xi \\
+\gamma(z) &= \int\frac{x}{\eta_C(z)+z\delta(z)x}F_\gamma(dx) \\
+&= \frac{\gamma}{\eta_C(z) + z\delta(z)} \\
+\delta(z) &= \int\frac{x}{z\gamma(z)x+1}F_\xi(dx) \\
+&= \frac{\xi}{z\gamma(z)+1}
+\end{align*}
+\todo
+\begin{align*}
+\eta_C(z) &= (1-\gamma) + \frac{\gamma}{(1+z\left(1+\frac{\xi-1}{\eta_C(z)}\right)}
+\end{align*}
+
+\end{itemize}
+
+
+\newpage
+
+
+\section{Scratch notes}
+
+\begin{itemize}
+
+\item
+Stieltjes transform: \\
+\url{https://mathoverflow.net/questions/79109/intuitive-understanding-of-the-stieltjes-transform} \\
+\url{https://terrytao.wordpress.com/2010/02/02/254a-notes-4-the-semi-circular-law/} \\
+Berkeley lecture notes: \url{https://www.stat.berkeley.edu/~songmei/Teaching/STAT260_Spring2021/Lecture_notes/scribe_lecture17.pdf} \\
+Distribution of sums of independent commutative r.v.'s can be quickly computed using characteristic function; analogous for distribution of sums of freely independent non-commutative r.v.'s is using the Stieltjes transform
+
+\item
+Free probability (non-commutative random variables, e.g., random matrices): \\
+\url{https://terrytao.wordpress.com/2010/02/10/245a-notes-5-free-probability/} \\
+Light intro: \url{https://arxiv.org/pdf/1902.10763.pdf} \citep{Xia:2019}
+\begin{itemize}
+\item
+Freeness between non-commutative random variables analogous to independence in commutative random variables
+\item
+Semicircular distribution of free CLT analogous to Gaussian distribution of classical CLT; the asymptotic distributions of eigenvalues of Hermition Gaussian random matrices (Wigner's semi-circle law); sub-Gaussian distribution \\
+Example: \url{https://mathworld.wolfram.com/WignersSemicircleLaw.html}
+\item
+Cauchy transform = Stieltjes transform (or closely related)? Theorem~3 says that Cauchy transforms and probability measures on $\bbR$ are in one-to-one correspondence
+\item
+One method to construct Haar unitary matrices: take $n\times n$ random matrix with \iid Gaussian random variables and apply the Gram-Schmidt procedure
+\end{itemize}
+
+\end{itemize}
+
 
 
 \newpage

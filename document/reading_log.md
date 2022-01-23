@@ -1,4 +1,8 @@
-# date
-## paper
+## Jan. 19-22
+### Lacotte, 2020
 
-thoughts...
+* The convergence rate results are derived based on the limiting spectral distributions, which are obtained by applying results from random matrix theory/free probability.
+
+### Xia, 2019
+
+* Light introduction and decent starting point to free probability theory.
