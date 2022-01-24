@@ -1,6 +1,8 @@
 ## Jan. 23
 ### Couillet, 2011
 
+* More comprehensive introduction to random matrix theory.
+
 ## Jan. 19-22
 ### Lacotte, 2020
 
@@ -8,4 +10,4 @@
 
 ### Xia, 2019
 
-* Light introduction and decent starting point to free probability theory.
+* Light introduction and decent starting point to random matrix theory.

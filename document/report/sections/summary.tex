@@ -42,8 +42,21 @@ The main results are Theorems~3.1 and 4.1. Theorem~3.1 says that for IHS with Ha
 \[
 \rho_H = \rho_G\cdot\frac{\xi(1-\xi)}{\gamma^2+\xi-2\xi\gamma} \;.
 \]
-The constant factor is less than 1 and therefore $\rho_H<\rho_G$, implying that IHS with Haar sketches converges at a faster rate than with Gaussian sketches.  Theorem~4.1 states a similar conclusion for IHS with SRHT sketches where the optimal rate $\rho_S$ is the same as that with Haar sketches, i.e., $\rho_S=\rho_H$, under an additional mild assumption on the initialization of the least squares problem which is necessary for drawing on known random matrix results. \todo optimal parameters
+The proportional factor is less than 1 and therefore $\rho_H<\rho_G$, implying that IHS with Haar sketches converges at a faster rate than with Gaussian sketches.  Theorem~4.1 states a similar conclusion for IHS with SRHT sketches where the optimal rate $\rho_S$ is the same as that with Haar sketches, i.e., $\rho_S=\rho_H$, under an additional mild assumption on the initialization of the least squares problem which is necessary for drawing on existing results in random matrix theory. Theorem~3.1 also states that the optimal convergence rate for IHS with Haar sketches is obtained using momentum values $\beta_t=0$ (i.e., momentum does not help) and step sizes $\alpha_t = \frac{\theta_{1,H}}{\theta_{2,H}}$ where $\theta_{k,H}$ is the $k$-th inverse moment of the Haar sketch, i.e.,
+\[
+\theta_{k,H} = \lim_{n\rightarrow\infty}\frac{1}{d}\E\left[\mathrm{trace}\left((\bfU^\T\bfS^\T\bfS\bfU)^{-k}\right)\right]
+\]
+for $m\times n$ Haar matrix $\bfS$ and $n\times d$ deterministic matrix $\bfU$ with orthonormal columns. Lemma~3.2 provides closed-form expressions for the first two inverse moments given by
+\begin{align*}
+\theta_{1,H} &= \frac{1-\gamma}{\xi-\gamma} \;, & \theta_{2,H} &= \frac{(1-\gamma)(\gamma^2+\xi-2\gamma\xi)}{(\xi-\gamma)^3} \;.
+\end{align*}
+Theorem~4.1 and Lemma~4.3 together state that the limiting distribution of Haar and SRHT sketches are the same and therefore so is the optimal step size when there is no momentum. However, the optimality of $\beta_t=0$ for IHS with SRHT sketches is only a conjecture based on numerical simulations.
+\\
+
+\todo other contributions (complexity analysis, empirical study on synthetic data?)
 
 \subsection{Related literature}
 
 \subsection{Limitations}
+
+\todo based on asymptotic results, empirical evaluation mostly on synthetic data
