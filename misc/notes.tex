@@ -37,7 +37,7 @@ The matrix $H_t$ is an approximation of the Hessian $H=\bfX^\T\bfX$ and is given
 Gaussian sketches where $(\bfS_t)_{ij}\overset{\text{\iid}}{\sim} N(0,m^{-1})$. Computing the matrix product $\bfS\bfX$ is $O(mnd)$ in general, which is larger than the cost of $O(nd^2)$ for direct method solvers when $m\geq d$.
 
 \item
-truncated Haar sketches using Haar matrices $\bfS_t$ where the rows are orthonormal (\todo: other qualifications? Truncated?). Generating the matrix requires $O(nm^2)$ using a Gram-Schmidt procedure which is larger than $O(nd^2)$.
+truncated Haar sketches using Haar matrices $\bfS_t$ where the rows are orthonormal. Generating the matrix requires $O(nm^2)$ using a Gram-Schmidt procedure which is larger than $O(nd^2)$.
 
 \item
 subsampled randomized Hadamard transform where the sketch $\bfS\bfX$ can be obtained in $O(nd\log m)$ time. Like other orthogonal embeddings, the performance tends to be better than random projections with \iid entries.
@@ -207,7 +207,14 @@ Stieltjes transform: \\
 \url{https://mathoverflow.net/questions/79109/intuitive-understanding-of-the-stieltjes-transform} \\
 \url{https://terrytao.wordpress.com/2010/02/02/254a-notes-4-the-semi-circular-law/} \\
 Berkeley lecture notes: \url{https://www.stat.berkeley.edu/~songmei/Teaching/STAT260_Spring2021/Lecture_notes/scribe_lecture17.pdf} \\
-Distribution of sums of independent commutative r.v.'s can be quickly computed using characteristic function; analogous for distribution of sums of freely independent non-commutative r.v.'s is using the Stieltjes transform
+Distribution of sums of independent commutative r.v.'s can be quickly computed using characteristic function; analogous for distribution of sums of freely independent non-commutative r.v.'s is using the Stieltjes transform \\
+Stieltjes transform of \esd of a random matrix is easy to compute \citep{Couillet:2011}
+
+\item
+$S$-transform: under suitable conditions, the $S$-transform of the \lsd of a matrix product $\bfA\bfB$ is the product of the $S$-transforms of the \lsd of $\bfA$ and the \lsd of $\bfB$ \citep{Couillet:2011}
+
+\item
+$\eta$-transform: purpose mainly to simplify long derivations involving Stieltjes transform \citep{Couillet:2011}
 
 \item
 Free probability (non-commutative random variables, e.g., random matrices): \\
@@ -224,6 +231,9 @@ Cauchy transform = Stieltjes transform (or closely related)? Theorem~3 says that
 \item
 One method to construct Haar unitary matrices: take $n\times n$ random matrix with \iid Gaussian random variables and apply the Gram-Schmidt procedure
 \end{itemize}
+
+\item
+Marchenko-Pastur proof given in \citep{Couillet:2011}
 
 \end{itemize}
 

@@ -4,5 +4,46 @@
 
 \section{Summary}
 
+\subsection{Context and background}
 
-In this paper I cite~\citep{james:2005}. But \citet{james:2005} cites me.
+\citet{Lacotte:2020} study the theoretical performance of iterative Hessian sketch (IHS) for overdetermined least squares problems of the form
+\[
+\bfb^* = \argmin_{\bfb\in\bbR^d}\left\{f(\bfb) = \frac{1}{2}\|\bfX\bfb-\bfy\|^2\right\}
+\]
+where $\bfX\in\bbR^{n\times d}$, $n\geq d$, is a given full rank data matrix and $\bfy\in\bbR^n$ is a vector of observations. IHS is an iterative method based on random projections that is effective for ill-conditioned problems. Given step sizes $\{\alpha_t\}$ and momentum parameters $\{\beta_t\}$, the IHS solution is iteratively updated by 
+\[
+\bfb_{t+1} = \bfb_t - \alpha_t\bfH_t^{-1}\nabla f(\bfb_t)+\beta_t(\bfb_t-\bfb_{t-1}) \;.
+\]
+where the matrix $\bfH_t=\bfX^\T \bfS_t^\T \bfS_t\bfX$ is an approximation of the Hessian $\bfH=\bfX^\T\bfX$ given refreshed (i.i.d.) $m\times n$ sketching (random) matrices $\{\bfS_t\}$ with $m\ll n$. The theoretical performance of IHS with Gaussian sketches (i.e., where $(\bfS_t)_{ij}$ are \iid $N(0,m^{-1})$) has been studied, but IHS variants with other sketches have only been empirically studied. In their work, \citet{Lacotte:2020} draw on results from random matrix and free probability theory and show that the following sketches have faster (asymptotic) convergence rates compared to Gaussian sketches:
+\begin{enumerate}
+
+\item
+truncated Haar sketch, where the rows of $\bfS_t$ are orthonormal. The orthogonality helps to prevent distortions in random projections but at the expense of requiring the Gram-Schmidt procedure, which has cost $O(nm^2)$ larger than the $O(nmd)$ cost when using Gaussian sketches.
+
+\item
+a version of the subsampled randomized Hadamard transform (SRHT), with $\bfS_t$ constructed from $\bfR_t=n^{-\frac{1}{2}}\bfB_t(\bfW_n)_t\bfD_t\bfP_t$ where $\bfB_t$ is a $n\times n$ diagonal matrix with \iid Bernoulli$\left(\frac{m}{n}\right)$ samples on the diagonal, $\bfD_t$ is a $n\times n$ diagonal matrix with uniformly sampled $\pm1$ on the diagonal, $\bfP_t$ is a $n\times n$ uniformly sampled row permutation matrix, and $(\bfW_n)_t$ is the $n\times n$ Walsh-Hadamard matrix defined recursively as
+\[
+\bfW_n =
+\begin{bmatrix}
+\bfW_\frac{n}{2} & \bfW_\frac{n}{2} \\
+\bfW_\frac{n}{2} & -\bfW_\frac{n}{2}
+\end{bmatrix}
+\]
+where $\bfW_1=1$. $\bfS_t$ is taken as $\bfR_t$ with the zeros rows removed (as selected by $\bfB_t$). Note that because of this subsampling, $\bfS_t$ is a $M\times n$ matrix with $\E[M]=m$. Sketching with SRHT only requires $O(nd\log M)$.
+
+\end{enumerate}
+
+\subsection{Main contributions}
+
+The main contributions of \citet{Lacotte:2020} include several theoretical results that prescribe the (asymptotically) optimal value of the parameters for IHS with Haar or SRHT sketches, the corresponding convergence rates of IHS with these parameters, and closed form expression for the second inverse moment of SRHT sketches. These results are obtained based on asymptotic results from random matrix theory, in which it is assumed that the matrix dimensions satisfy the aspect ratios $\frac{d}{n}\rightarrow\gamma\in(0,1)$ and $\frac{m}{n}\rightarrow\xi\in(\gamma,1)$ as $n,d,m\rightarrow\infty$.
+\\
+
+The main results are Theorems~3.1 and 4.1. Theorem~3.1 says that for IHS with Haar sketches, the optimal rate $\rho_H$ at which the relative expected squared error decreases in each iteration is constant and proportional to the optimal rate $\rho_G$ of IHS with Gaussian sketches, and is given by
+\[
+\rho_H = \rho_G\cdot\frac{\xi(1-\xi)}{\gamma^2+\xi-2\xi\gamma} \;.
+\]
+The constant factor is less than 1 and therefore $\rho_H<\rho_G$, implying that IHS with Haar sketches converges at a faster rate than with Gaussian sketches.  Theorem~4.1 states a similar conclusion for IHS with SRHT sketches where the optimal rate $\rho_S$ is the same as that with Haar sketches, i.e., $\rho_S=\rho_H$, under an additional mild assumption on the initialization of the least squares problem which is necessary for drawing on known random matrix results. \todo optimal parameters
+
+\subsection{Related literature}
+
+\subsection{Limitations}
