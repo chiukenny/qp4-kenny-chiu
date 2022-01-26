@@ -6,7 +6,7 @@
 
 \subsection{Context and background}
 
-\citet{Lacotte:2020} study the theoretical performance of iterative Hessian sketch (IHS) for overdetermined least squares problems of the form
+\citet{Lacotte:2020} study the theoretical performance of iterative Hessian sketch (IHS) \citep{Pilanci:2016} for overdetermined least squares problems of the form
 \[
 \bfb^* = \argmin_{\bfb\in\bbR^d}\left\{f(\bfb) = \frac{1}{2}\|\bfX\bfb-\bfy\|^2\right\}
 \]
@@ -35,14 +35,14 @@ where $\bfW_1=1$. $\bfS_t$ is taken as $\bfR_t$ with the zeros rows removed (as 
 
 \subsection{Main contributions}
 
-The main contributions of \citet{Lacotte:2020} include several theoretical results that prescribe the (asymptotically) optimal value of the parameters for IHS with Haar or SRHT sketches, the corresponding convergence rates of IHS with these parameters, and closed form expression for the second inverse moment of SRHT sketches. These results are obtained based on asymptotic results from random matrix theory, in which it is assumed that the matrix dimensions satisfy the aspect ratios $\frac{d}{n}\rightarrow\gamma\in(0,1)$ and $\frac{m}{n}\rightarrow\xi\in(\gamma,1)$ as $n,d,m\rightarrow\infty$.
+The main contributions of \citet{Lacotte:2020} include several theoretical results that describe the (asymptotically) optimal value of the parameters for IHS with Haar or SRHT sketches, the corresponding convergence rates of IHS with these parameters, and closed form expressions for the inverse moments of SRHT sketches. These results are obtained based on asymptotic results from random matrix theory, in which it is assumed that the matrix dimensions satisfy the aspect ratios $\frac{d}{n}\rightarrow\gamma\in(0,1)$ and $\frac{m}{n}\rightarrow\xi\in(\gamma,1)$ as $n,d,m\rightarrow\infty$.
 \\
 
-The main results are Theorems~3.1 and 4.1. Theorem~3.1 says that for IHS with Haar sketches, the optimal rate $\rho_H$ at which the relative expected squared error decreases in each iteration is constant and proportional to the optimal rate $\rho_G$ of IHS with Gaussian sketches, and is given by
+The main results are Theorems~3.1 and 4.1. Theorem~3.1 says that for IHS with Haar sketches, the optimal convergence rate $\rho_H$ of the relative expected squared error is proportional to the optimal rate $\rho_G$ of IHS with Gaussian sketches, and is given by
 \[
 \rho_H = \rho_G\cdot\frac{\xi(1-\xi)}{\gamma^2+\xi-2\xi\gamma} \;.
 \]
-The proportional factor is less than 1 and therefore $\rho_H<\rho_G$, implying that IHS with Haar sketches converges at a faster rate than with Gaussian sketches.  Theorem~4.1 states a similar conclusion for IHS with SRHT sketches where the optimal rate $\rho_S$ is the same as that with Haar sketches, i.e., $\rho_S=\rho_H$, under an additional mild assumption on the initialization of the least squares problem which is necessary for drawing on existing results in random matrix theory. Theorem~3.1 also states that the optimal convergence rate for IHS with Haar sketches is obtained using momentum values $\beta_t=0$ (i.e., momentum does not help) and step sizes $\alpha_t = \frac{\theta_{1,H}}{\theta_{2,H}}$ where $\theta_{k,H}$ is the $k$-th inverse moment of the Haar sketch, i.e.,
+The aspect ratio scaling factor is less than 1 and therefore $\rho_H<\rho_G$, implying that IHS with Haar sketches converges at a faster rate than with Gaussian sketches.  Theorem~4.1 states a similar conclusion for IHS with SRHT sketches where the optimal rate $\rho_S$ is the same as that with Haar sketches, i.e., $\rho_S=\rho_H$, under an additional mild assumption on the initialization of the least squares problem which is necessary for drawing on existing results in random matrix theory. Theorem~3.1 also states that the optimal convergence rate for IHS with Haar sketches is obtained using momentum values $\beta_t=0$ (i.e., momentum does not help) and step sizes $\alpha_t = \frac{\theta_{1,H}}{\theta_{2,H}}$ where $\theta_{k,H}$ is the $k$-th inverse moment of the Haar sketch, i.e.,
 \[
 \theta_{k,H} = \lim_{n\rightarrow\infty}\frac{1}{d}\E\left[\mathrm{trace}\left((\bfU^\T\bfS^\T\bfS\bfU)^{-k}\right)\right]
 \]
@@ -53,10 +53,15 @@ for $m\times n$ Haar matrix $\bfS$ and $n\times d$ deterministic matrix $\bfU$ w
 Theorem~4.1 and Lemma~4.3 together state that the limiting distribution of Haar and SRHT sketches are the same and therefore so is the optimal step size when there is no momentum. However, the optimality of $\beta_t=0$ for IHS with SRHT sketches is only a conjecture based on numerical simulations.
 \\
 
-\todo other contributions (complexity analysis, empirical study on synthetic data?)
+Other contributions of \citet{Lacotte:2020} include a complexity analysis of IHS with SRHT sketches and an empirical study of the theoretical results. The complexity analysis concludes that the asymptotic performance of IHS with SRHT sketches is faster than that of the standard pre-conditioned conjugate gradient method (pCG) \citep{Rokhlin:2008} by a factor of $\log(d)$. The empirical study verifies that the limiting results can apply to the finite case where the convergence of IHS with Haar and with SRHT sketches are similar and faster than that of Gaussian sketches on ill-conditioned synthetic and real datasets, and that the IHS with SRHT sketches refreshed every iteration has faster convergence than pCG on a synthetic ill-conditioned dataset.
 
 \subsection{Related literature}
 
+\todo
+
 \subsection{Limitations}
 
-\todo based on asymptotic results, empirical evaluation mostly on synthetic data
+The main limitations of the work by \citet{Lacotte:2020} include the reliance on asymptotic theory, the empirical evaluation of results on mostly synthetic datasets, and the unclear generalizability of results to more complicated problems.
+\\
+
+\citet{Lacotte:2020} obtain the convergence rates of IHS with different sketching matrices by drawing on results from asymptotic random matrix theory. The consequence \todo

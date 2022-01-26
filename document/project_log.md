@@ -1,3 +1,8 @@
+## Jan. 25
+
+* First meeting.
+* Continued draft of summary.
+
 ## Jan. 23-24
 
 * Started draft of summary.
