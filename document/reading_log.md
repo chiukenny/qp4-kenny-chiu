@@ -1,3 +1,12 @@
+## Jan. 26
+### Pilanci, 2016
+
+* IHS introduced with discussion of least squares problems with convex constraints.
+* Original motivation is to address sub-optimality (w.r.t. solution approximation) of classical least squares sketching.
+* Sketch dimension per iteration only needs to be proportional to dimension of optimal solution.
+* log(1/epsilon) iterations for epsilon-accurate solution.
+* Ideas: regularized regression, convex Lp-norm regression problems.
+
 ## Jan. 23
 ### Couillet, 2011
 

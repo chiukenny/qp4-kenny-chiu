@@ -21,7 +21,7 @@ where the matrix $\bfH_t=\bfX^\T \bfS_t^\T \bfS_t\bfX$ is an approximation of th
 truncated Haar sketch, where the rows of $\bfS_t$ are orthonormal. The orthogonality helps to prevent distortions in random projections but at the expense of requiring the Gram-Schmidt procedure, which has cost $O(nm^2)$ larger than the $O(nmd)$ cost when using Gaussian sketches.
 
 \item
-a version of the subsampled randomized Hadamard transform (SRHT), with $\bfS_t$ constructed from $\bfR_t=n^{-\frac{1}{2}}\bfB_t(\bfW_n)_t\bfD_t\bfP_t$ where $\bfB_t$ is a $n\times n$ diagonal matrix with \iid Bernoulli$\left(\frac{m}{n}\right)$ samples on the diagonal, $\bfD_t$ is a $n\times n$ diagonal matrix with uniformly sampled $\pm1$ on the diagonal, $\bfP_t$ is a $n\times n$ uniformly sampled row permutation matrix, and $(\bfW_n)_t$ is the $n\times n$ Walsh-Hadamard matrix defined recursively as
+a version of the subsampled randomized Hadamard transform (SRHT), with $\bfS_t$ constructed from $\bfR_t=n^{-\frac{1}{2}}\bfB_t(\bfW_n)_t\bfD_t\bfP_t$ where $\bfB_t$ is a $n\times n$ diagonal matrix of \iid Bernoulli$\left(\frac{m}{n}\right)$ samples, $\bfD_t$ is a $n\times n$ diagonal matrix of \iid Rademacher samples, $\bfP_t$ is a $n\times n$ uniformly sampled row permutation matrix, and $(\bfW_n)_t$ is the $n\times n$ Walsh-Hadamard matrix defined recursively as
 \[
 \bfW_n =
 \begin{bmatrix}
@@ -58,10 +58,14 @@ Other contributions of \citet{Lacotte:2020} include a complexity analysis of IHS
 \subsection{Related literature}
 
 \todo
+comparison of sketching matrices \citet{Dobriban:2019}
 
 \subsection{Limitations}
 
-The main limitations of the work by \citet{Lacotte:2020} include the reliance on asymptotic theory, the empirical evaluation of results on mostly synthetic datasets, and the unclear generalizability of results to more complicated problems.
+The limitations of the work by \citet{Lacotte:2020} include the reliance on asymptotic theory, the empirical evaluation of results on mostly synthetic datasets, and the unclear generalizability of results to more complicated problems.
 \\
 
-\citet{Lacotte:2020} obtain the convergence rates of IHS with different sketching matrices by drawing on results from asymptotic random matrix theory. The consequence \todo
+\citet{Lacotte:2020} obtain the convergence rates of IHS with different sketching matrices by drawing on results from asymptotic random matrix theory. The consequence is that these results may not apply in the case of small datasets. While their simulations show that the theory does apply to moderately-sized datasets, the datasets that they examine are primarily synthetic and designed to satisfy assumptions even if ill-conditioned. However, there is also the counterargument that IHS would only be considered over standard solvers for large data problems, and so these limitations are relatively minor.
+\\
+
+The main limitation of the work is the simple problem context that the results are derived for. While the theory shows that IHS is promising for large data, overdetermined least squares problems, standard solvers would still be preferred over IHS in large data problems if the appropriate computational resources were available. It is unclear whether the theory could generalize to more complicated problems, such as to undetermined least squares problems or optimization problems with other losses. It would particularly be of interest to understand whether there are problems where IHS would be preferred to conventional solvers in the general case.

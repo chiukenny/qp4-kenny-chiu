@@ -1,3 +1,7 @@
+## Jan. 26
+
+* Looked for related literature.
+
 ## Jan. 25
 
 * First meeting.

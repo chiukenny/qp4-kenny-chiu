@@ -195,10 +195,17 @@ System of equations
 \end{itemize}
 
 
+\subsection{Code}
+
+\href{https://github.com/jonathanlctt/ihs_srht}{GitHub}
+
+
 \newpage
 
 
 \section{Scratch notes}
+
+\subsection{Random matrix theory}
 
 \begin{itemize}
 
@@ -234,6 +241,54 @@ One method to construct Haar unitary matrices: take $n\times n$ random matrix wi
 
 \item
 Marchenko-Pastur proof given in \citep{Couillet:2011}
+
+\end{itemize}
+
+
+\subsection{Newton's method}
+
+Problem: for $f$ twice-differentiable, minimize
+\[
+\min_{x\in\bbR} f(x) \;.
+\]
+Second-order Taylor expansion around iterate $x_t$:
+\[
+f(x_t+a) \approx f(x_t) + f'(x_t)a + \frac{1}{2}f''(x_t)a^2 \;.
+\]
+If second derivative positive, minimum at derivative zero and so
+\[
+f'(x_t) + f''(x_t)a = 0 \qquad \Rightarrow\qquad a = -\frac{f'(x_t)}{f''(x_t)} \;.
+\]
+Newton update:
+\[
+x_{t+1} = x_t +a = x_t - \frac{f'(x_t)}{f''(x_t)} \;.
+\]
+
+
+\subsection{Related literature}
+
+\begin{itemize}
+
+\item
+Extensions of IHS: \\
+\href{https://arxiv.org/pdf/2002.06540.pdf}{Distributed Averaging Methods for Randomized Second Order Optimization} \\
+\href{https://ieeexplore.ieee.org/document/8682720}{Iterative Hessian Sketch with Momentum} \todo: how does this work differ or not contradict the current work? \\
+\href{https://proceedings.mlr.press/v119/lacotte20a/lacotte20a.pdf}{Optimal Randomized First-Order Methods for Least-Squares Problems} \todo: how does this work differ from the current work? \\
+\href{https://arxiv.org/pdf/2105.07291.pdf}{Adaptive Newton Sketch: Linear-time Optimization with Quadratic Convergence and Effective Hessian Dimensionality} \\
+\href{https://arxiv.org/pdf/2107.07480.pdf}{Newton-LESS: Sparsification without Trade-offs for the Sketched Newton Update}: sparse IHS? \\
+\href{https://proceedings.neurips.cc/paper/2019/file/1f36c15d6a3d18d52e8d493bc8187cb9-Paper.pdf}{Asymptotics for Sketching in Least Squares}: referenced paper in current work; compares one-step sketch matrices \\
+\href{https://arxiv.org/pdf/2006.05874.pdf}{Effective Dimension Adaptive Sketching Methods for Faster Regularized Least-Squares Optimization}: related?, probably not worth mentioning
+
+\item
+Applications: \\
+\href{https://projecteuclid.org/journals/annals-of-statistics/volume-45/issue-3/Randomized-sketches-for-kernels-Fast-and-optimal-nonparametric-regression/10.1214/16-AOS1472.full}{Randomized sketches for kernels: Fast and optimal nonparametric regression}
+
+\item
+Possibly helpful: \\
+\href{https://arxiv.org/pdf/2201.00450.pdf}{On randomized sketching algorithms and the Tracy-Widom law} \\
+\href{https://arxiv.org/pdf/1609.00048.pdf}{Practical sketching algorithms for low-rank matrix approximation} \\
+\href{https://www.jmlr.org/papers/volume17/15-440/15-440.pdf}{A Statistical Perspective on Randomized Sketching for Ordinary Least-Squares}: complementary to 2016 IHS paper \\
+\href{https://dl.acm.org/doi/10.1145/3034786.3056119}{Efficient Matrix Sketching over Distributed Data}: PCA?
 
 \end{itemize}
 
