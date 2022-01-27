@@ -1,3 +1,7 @@
+## Jan. 27
+
+* Continue literature review and write related literature section.
+
 ## Jan. 26
 
 * Looked for related literature.

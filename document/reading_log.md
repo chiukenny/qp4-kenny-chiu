@@ -1,3 +1,10 @@
+## Jan. 27
+### Dobriban, 2019
+
+* First to be able to distinguish performance of different sketching matrices.
+* Considers various loss functions.
+* Note: possible connections to factor rotations? See uniform sampling section.
+
 ## Jan. 26
 ### Pilanci, 2016
 
@@ -20,3 +27,4 @@
 ### Xia, 2019
 
 * Light introduction and decent starting point to random matrix theory.
+* Note: possible connections to factor rotations? See cumulants section.

@@ -57,15 +57,20 @@ Other contributions of \citet{Lacotte:2020} include a complexity analysis of IHS
 
 \subsection{Related literature}
 
-\todo
-comparison of sketching matrices \citet{Dobriban:2019}
+Works that focus on analyzing the statistical performance of sketching methods make up a small portion of the sketching literature. The work by \citet{Lacotte:2020} is said to be inspired by and therefore most similar to the work by \citet{Dobriban:2019}, which appears to be the first in the literature to leverage results from asymptotic random matrix theory. Analysis in the asymptotic regime appears to be key in being able to differentiate between the performance of different sketching matrices, which was an analytical challenge in previous works~\citep{Choromanski:2017,Pilanci:2016,Raskutti:2016}.
+\\
+
+Other related works in the literature include those that introduce new variants of IHS or similar sketching methods \todo. Analyses of the performance in these works are generally intended as a point of comparison against existing methods, make use of conventional analysis techniques rather than asymptotic theory, and do not examine the impact of specific sketching matrices.
 
 \subsection{Limitations}
 
-The limitations of the work by \citet{Lacotte:2020} include the reliance on asymptotic theory, the empirical evaluation of results on mostly synthetic datasets, and the unclear generalizability of results to more complicated problems.
+Limitations of the work by \citet{Lacotte:2020} include the reliance on asymptotic theory, the empirical evaluation of results on mostly synthetic datasets, the comparison of sketches based on a single criterion, and the unclear generalizability of results to more complicated problems.
 \\
 
 \citet{Lacotte:2020} obtain the convergence rates of IHS with different sketching matrices by drawing on results from asymptotic random matrix theory. The consequence is that these results may not apply in the case of small datasets. While their simulations show that the theory does apply to moderately-sized datasets, the datasets that they examine are primarily synthetic and designed to satisfy assumptions even if ill-conditioned. However, there is also the counterargument that IHS would only be considered over standard solvers for large data problems, and so these limitations are relatively minor.
 \\
 
-The main limitation of the work is the simple problem context that the results are derived for. While the theory shows that IHS is promising for large data, overdetermined least squares problems, standard solvers would still be preferred over IHS in large data problems if the appropriate computational resources were available. It is unclear whether the theory could generalize to more complicated problems, such as to undetermined least squares problems or optimization problems with other losses. It would particularly be of interest to understand whether there are problems where IHS would be preferred to conventional solvers in the general case.
+Another limitation of their work is that only a single criterion---namely the reconstruction error between the sketched solution and the optimal solution---is used to compare the performance of the sketching matrices. Other criteria have also been considered in the literature, such as those based on other losses or those based on out-of-sample prediction~\citep{Dobriban:2019,Pilanci:2016}. While certain criteria are intrinsically related~\citep{Drineas:2011}, they may still have differing properties and lead to differing results~\citep{Dobriban:2019}.
+\\
+
+The main limitation of their work is the simple problem context that the results are derived for. While the theory shows that IHS is promising for large data, overdetermined least squares problems, standard solvers would still be preferred over IHS in large data problems if the appropriate computational resources were available. It is unclear whether the theory could generalize to more complicated problems, such as to undetermined least squares problems or optimization problems with other losses. It would particularly be of interest to understand whether there are problems where IHS would be preferred to conventional solvers in the general case.
