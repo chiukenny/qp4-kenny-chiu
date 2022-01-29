@@ -6,22 +6,22 @@
 
 \subsection{Context and background}
 
-\citet{Lacotte:2020} study the theoretical performance of iterative Hessian sketch (IHS) \citep{Pilanci:2016} for overdetermined least squares problems of the form
+\citet{Lacotte:2020} study the performance of iterative Hessian sketch (IHS) \citep{Pilanci:2016} for overdetermined least squares problems of the form
 \[
 \bfb^* = \argmin_{\bfb\in\bbR^d}\left\{f(\bfb) = \frac{1}{2}\|\bfX\bfb-\bfy\|^2\right\}
 \]
-where $\bfX\in\bbR^{n\times d}$, $n\geq d$, is a given full rank data matrix and $\bfy\in\bbR^n$ is a vector of observations. IHS is an iterative method based on random projections that is effective for ill-conditioned problems. Given step sizes $\{\alpha_t\}$ and momentum parameters $\{\beta_t\}$, the IHS solution is iteratively updated by 
+where $\bfX\in\bbR^{n\times d}$, $n\geq d$, is a given full rank data matrix and $\bfy\in\bbR^n$ is a vector of observations. IHS is an iterative method based on random projections that is effective for large data and ill-conditioned problems. Given step sizes $\{\alpha_t\}$ and momentum parameters $\{\beta_t\}$, the IHS solution is iteratively updated using
 \[
-\bfb_{t+1} = \bfb_t - \alpha_t\bfH_t^{-1}\nabla f(\bfb_t)+\beta_t(\bfb_t-\bfb_{t-1}) \;.
+\bfb_{t+1} = \bfb_t - \alpha_t\bfH_t^{-1}\nabla f(\bfb_t)+\beta_t(\bfb_t-\bfb_{t-1})
 \]
-where the matrix $\bfH_t=\bfX^\T \bfS_t^\T \bfS_t\bfX$ is an approximation of the Hessian $\bfH=\bfX^\T\bfX$ given refreshed (i.i.d.) $m\times n$ sketching (random) matrices $\{\bfS_t\}$ with $m\ll n$. The theoretical performance of IHS with Gaussian sketches (i.e., where $(\bfS_t)_{ij}$ are \iid $N(0,m^{-1})$) has been studied, but IHS variants with other sketches have only been empirically studied. In their work, \citet{Lacotte:2020} draw on results from random matrix and free probability theory and show that the following sketches have faster (asymptotic) convergence rates compared to Gaussian sketches:
+where $\bfH_t=\bfX^\T \bfS_t^\T \bfS_t\bfX$ is an approximation of the Hessian $\bfH=\bfX^\T\bfX$ given refreshed (i.i.d.) $m\times n$ sketching (random) matrices $\{\bfS_t\}$ with $m\ll n$. The performance of IHS with Gaussian sketches (i.e., where $(\bfS_t)_{ij}$ are \iid $N(0,m^{-1})$) has been studied, but IHS with other sketches have only been empirically studied. In their work, \citet{Lacotte:2020} draw on results from random matrix and free probability theory and show that the following sketches (asymptotically) converge faster to the optimal solution compared to Gaussian sketches:
 \begin{enumerate}
 
 \item
-truncated Haar sketch, where the rows of $\bfS_t$ are orthonormal. The orthogonality helps to prevent distortions in random projections but at the expense of requiring the Gram-Schmidt procedure, which has cost $O(nm^2)$ larger than the $O(nmd)$ cost when using Gaussian sketches.
+Truncated Haar sketch, where the rows of $\bfS_t$ are orthonormal. Orthogonal sketches are preferred over \iid sketches as they do not distort the projection, but orthogonality in general Haar matrices come at the expense of requiring the Gram-Schmidt procedure, which has cost $O(nm^2)$ larger than the $O(nmd)$ cost when using Gaussian sketches.
 
 \item
-a version of the subsampled randomized Hadamard transform (SRHT), with $\bfS_t$ constructed from $\bfR_t=n^{-\frac{1}{2}}\bfB_t(\bfW_n)_t\bfD_t\bfP_t$ where $\bfB_t$ is a $n\times n$ diagonal matrix of \iid Bernoulli$\left(\frac{m}{n}\right)$ samples, $\bfD_t$ is a $n\times n$ diagonal matrix of \iid Rademacher samples, $\bfP_t$ is a $n\times n$ uniformly sampled row permutation matrix, and $(\bfW_n)_t$ is the $n\times n$ Walsh-Hadamard matrix defined recursively as
+A version of the subsampled randomized Hadamard transform (SRHT), with $\bfS_t$ constructed from $\bfR_t=n^{-\frac{1}{2}}\bfB_t\bfW_n\bfD_t\bfP_t$ where $\bfB_t$ is a $n\times n$ diagonal matrix of \iid Bernoulli$\left(\frac{m}{n}\right)$ samples, $\bfD_t$ is a $n\times n$ diagonal matrix of \iid Rademacher samples, $\bfP_t$ is a $n\times n$ uniformly sampled row permutation matrix, and $\bfW_n$ is the $n\times n$ Walsh-Hadamard matrix defined recursively as
 \[
 \bfW_n =
 \begin{bmatrix}
@@ -29,48 +29,51 @@ a version of the subsampled randomized Hadamard transform (SRHT), with $\bfS_t$ 
 \bfW_\frac{n}{2} & -\bfW_\frac{n}{2}
 \end{bmatrix}
 \]
-where $\bfW_1=1$. $\bfS_t$ is taken as $\bfR_t$ with the zeros rows removed (as selected by $\bfB_t$). Note that because of this subsampling, $\bfS_t$ is a $M\times n$ matrix with $\E[M]=m$. Sketching with SRHT only requires $O(nd\log M)$.
+where $\bfW_1=1$. $\bfS_t$ is taken as $\bfR_t$ with the zeros rows removed (as selected by $\bfB_t$). Note that due to this subsampling, $\bfS_t$ is a $M\times n$ matrix with $\E[M]=m$. By construction, SRHT sketches are orthogonal. Sketching with SRHT only requires $O(nd\log M)$.
 
 \end{enumerate}
+
 
 \subsection{Main contributions}
 
 The main contributions of \citet{Lacotte:2020} include several theoretical results that describe the (asymptotically) optimal value of the parameters for IHS with Haar or SRHT sketches, the corresponding convergence rates of IHS with these parameters, and closed form expressions for the inverse moments of SRHT sketches. These results are obtained based on asymptotic results from random matrix theory, in which it is assumed that the matrix dimensions satisfy the aspect ratios $\frac{d}{n}\rightarrow\gamma\in(0,1)$ and $\frac{m}{n}\rightarrow\xi\in(\gamma,1)$ as $n,d,m\rightarrow\infty$.
 \\
 
-The main results are Theorems~3.1 and 4.1. Theorem~3.1 says that for IHS with Haar sketches, the optimal convergence rate $\rho_H$ of the relative expected squared error is proportional to the optimal rate $\rho_G$ of IHS with Gaussian sketches, and is given by
+The main results are Theorems~3.1 and 4.1. Theorem~3.1 says that for IHS with Haar sketches, the optimal convergence rate $\rho_H$ of the relative prediction error is
 \[
-\rho_H = \rho_G\cdot\frac{\xi(1-\xi)}{\gamma^2+\xi-2\xi\gamma} \;.
+\rho_H  = \left(\lim_{n\rightarrow\infty}\frac{\E\left[\|\bfX(\bfb_t-\bfb^*)\|^2\right]}{\|\bfX(\bfb_0-\bfb^*)\|^2}\right)^\frac{1}{t} = \rho_G\cdot\frac{\xi(1-\xi)}{\gamma^2+\xi-2\xi\gamma}
 \]
-The aspect ratio scaling factor is less than 1 and therefore $\rho_H<\rho_G$, implying that IHS with Haar sketches converges at a faster rate than with Gaussian sketches.  Theorem~4.1 states a similar conclusion for IHS with SRHT sketches where the optimal rate $\rho_S$ is the same as that with Haar sketches, i.e., $\rho_S=\rho_H$, under an additional mild assumption on the initialization of the least squares problem which is necessary for drawing on existing results in random matrix theory. Theorem~3.1 also states that the optimal convergence rate for IHS with Haar sketches is obtained using momentum values $\beta_t=0$ (i.e., momentum does not help) and step sizes $\alpha_t = \frac{\theta_{1,H}}{\theta_{2,H}}$ where $\theta_{k,H}$ is the $k$-th inverse moment of the Haar sketch, i.e.,
+where $\rho_G$ is the optimal rate of IHS with Gaussian sketches. The aspect ratio scaling factor is less than 1, implying that $\rho_H<\rho_G$ and that IHS with Haar sketches converges faster than with Gaussian sketches.  Theorem~4.1 states a similar conclusion for IHS with SRHT sketches where under an additional mild assumption on the initialization of the least squares problem (which is necessary for drawing on existing results in random matrix theory), the optimal rate $\rho_S$ is the same as that with Haar sketches, i.e., $\rho_S=\rho_H$. Theorem~3.1 also states that the optimal convergence rate for IHS with Haar sketches is obtained using momentum values $\beta_t=0$ (i.e., momentum does not help) and step sizes $\alpha_t = \frac{\theta_{1,H}}{\theta_{2,H}}$ where $\theta_{k,H}$ is the $k$-th inverse moment of the Haar sketch defined as
 \[
 \theta_{k,H} = \lim_{n\rightarrow\infty}\frac{1}{d}\E\left[\mathrm{trace}\left((\bfU^\T\bfS^\T\bfS\bfU)^{-k}\right)\right]
 \]
-for $m\times n$ Haar matrix $\bfS$ and $n\times d$ deterministic matrix $\bfU$ with orthonormal columns. Lemma~3.2 provides closed-form expressions for the first two inverse moments given by
+for $m\times n$ Haar matrix $\bfS$ and $n\times d$ deterministic matrix $\bfU$ with orthonormal columns. Closed-form expressions for the first two inverse moments are provided in Lemma~3.2 and are given by
 \begin{align*}
 \theta_{1,H} &= \frac{1-\gamma}{\xi-\gamma} \;, & \theta_{2,H} &= \frac{(1-\gamma)(\gamma^2+\xi-2\gamma\xi)}{(\xi-\gamma)^3} \;.
 \end{align*}
 Theorem~4.1 and Lemma~4.3 together state that the limiting distribution of Haar and SRHT sketches are the same and therefore so is the optimal step size when there is no momentum. However, the optimality of $\beta_t=0$ for IHS with SRHT sketches is only a conjecture based on numerical simulations.
 \\
 
-Other contributions of \citet{Lacotte:2020} include a complexity analysis of IHS with SRHT sketches and an empirical study of the theoretical results. The complexity analysis concludes that the asymptotic performance of IHS with SRHT sketches is faster than that of the standard pre-conditioned conjugate gradient method (pCG) \citep{Rokhlin:2008} by a factor of $\log(d)$. The empirical study verifies that the limiting results can apply to the finite case where the convergence of IHS with Haar and with SRHT sketches are similar and faster than that of Gaussian sketches on ill-conditioned synthetic and real datasets, and that the IHS with SRHT sketches refreshed every iteration has faster convergence than pCG on a synthetic ill-conditioned dataset.
+Other contributions of \citet{Lacotte:2020} include a complexity analysis of IHS with SRHT sketches and an empirical study of the theoretical results. The complexity analysis concludes that the asymptotic performance of IHS with SRHT sketches is faster than that of the pre-conditioned conjugate gradient method (pCG) \citep{Rokhlin:2008} by a factor of $\log(d)$. The empirical study verifies that the limiting results can apply in the finite case where the convergence of IHS with Haar and with SRHT sketches are similar and faster than that of Gaussian sketches on ill-conditioned synthetic and real datasets of moderate size ($n\geq 4000$, $d\geq 200$), and that the IHS with SRHT sketches refreshed every iteration has faster convergence than pCG on a similar synthetic dataset.
 
-\subsection{Related literature}
-
-Works that focus on analyzing the statistical performance of sketching methods make up a small portion of the sketching literature. The work by \citet{Lacotte:2020} is said to be inspired by and therefore most similar to the work by \citet{Dobriban:2019}, which appears to be the first in the literature to leverage results from asymptotic random matrix theory. Analysis in the asymptotic regime appears to be key in being able to differentiate between the performance of different sketching matrices, which was an analytical challenge in previous works~\citep{Choromanski:2017,Pilanci:2016,Raskutti:2016}.
-\\
-
-Other related works in the literature include those that introduce new variants of IHS or similar sketching methods \todo. Analyses of the performance in these works are generally intended as a point of comparison against existing methods, make use of conventional analysis techniques rather than asymptotic theory, and do not examine the impact of specific sketching matrices.
 
 \subsection{Limitations}
 
 Limitations of the work by \citet{Lacotte:2020} include the reliance on asymptotic theory, the empirical evaluation of results on mostly synthetic datasets, the comparison of sketches based on a single criterion, and the unclear generalizability of results to more complicated problems.
 \\
 
-\citet{Lacotte:2020} obtain the convergence rates of IHS with different sketching matrices by drawing on results from asymptotic random matrix theory. The consequence is that these results may not apply in the case of small datasets. While their simulations show that the theory does apply to moderately-sized datasets, the datasets that they examine are primarily synthetic and designed to satisfy assumptions even if ill-conditioned. However, there is also the counterargument that IHS would only be considered over standard solvers for large data problems, and so these limitations are relatively minor.
+\citet{Lacotte:2020} obtain the convergence rates of IHS with different sketching matrices by drawing on results from asymptotic random matrix theory. While their simulations show that the theory does apply in moderately-sized datasets, the datasets that they examine are primarily synthetic and designed to satisfy assumptions even if ill-conditioned. However, there is also the counterargument that IHS would only be considered over standard solvers for large data problems, and so these limitations are relatively minor.
 \\
 
-Another limitation of their work is that only a single criterion---namely the reconstruction error between the sketched solution and the optimal solution---is used to compare the performance of the sketching matrices. Other criteria have also been considered in the literature, such as those based on other losses or those based on out-of-sample prediction~\citep{Dobriban:2019,Pilanci:2016}. While certain criteria are intrinsically related~\citep{Drineas:2011}, they may still have differing properties and lead to differing results~\citep{Dobriban:2019}.
+Another limitation of their work is that only a single criterion---namely the prediction error between the sketched solution and the optimal solution---is used to compare the performance of the sketching matrices. Other criteria have also been considered in the literature, such as those based on other losses or those based on out-of-sample prediction~\citep{Dobriban:2019,Pilanci:2016}. While certain criteria are intrinsically related~\citep{Drineas:2011}, they may still have differing properties and lead to differing results~\citep{Dobriban:2019}.
 \\
 
-The main limitation of their work is the simple problem context that the results are derived for. While the theory shows that IHS is promising for large data, overdetermined least squares problems, standard solvers would still be preferred over IHS in large data problems if the appropriate computational resources were available. It is unclear whether the theory could generalize to more complicated problems, such as to undetermined least squares problems or optimization problems with other losses. It would particularly be of interest to understand whether there are problems where IHS would be preferred to conventional solvers in the general case.
+The main limitation of the work by \citet{Lacotte:2020} is the simple problem context that the results are derived for. While the theory shows that IHS is promising for large data, overdetermined least squares problems, standard solvers would still be preferred over IHS in large data problems if the appropriate computational resources were available. It is unclear whether the theory could generalize to more complicated problems, such as to undetermined least squares problems or optimization problems with other losses. It would be particularly useful to understand whether there are problems for which IHS would be preferred over conventional solvers in the general case.
+
+
+\subsection{Related literature}
+
+Works that analyze the impact of sketch type in sketching methods make up a small portion of the sketching literature. The work by \citet{Lacotte:2020} is said to be inspired by and therefore most similar to the work by \citet{Dobriban:2019}, which appears to be the first in the literature to leverage results from asymptotic random matrix theory. Analysis in the asymptotic regime appears to be key in being able to differentiate between the performance of different sketching matrices, which was an analytical challenge in previous works~\citep{Choromanski:2017,Pilanci:2016,Raskutti:2016}. More recently, \citet{Lacotte:2020b} directly extended their analysis to IHS with non-refreshed sketches, in which case momentum plays a bigger role.
+\\
+
+Recent related works in the literature also include those that propose extensions of IHS, e.g., IHS with momentum and fixed sketches~\citep{Ozaslan:2019}, distributed IHS~\citep{Derezinski:2020}, IHS with adaptive sketch sizes~\citep{Lacotte:2021}, and sparse IHS~\citep{Derezinski:2021}. Analyses of the performance in these works generally are intended as a point of comparison against existing methods, are done empirically or make use of conventional analysis techniques rather than asymptotic theory, and do not examine the impact of specific sketching matrices.

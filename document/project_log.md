@@ -1,3 +1,7 @@
+## Jan. 28
+
+* Finished first draft of summary.
+
 ## Jan. 27
 
 * Continue literature review and write related literature section.

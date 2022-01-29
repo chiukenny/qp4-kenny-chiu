@@ -1,3 +1,7 @@
+## Jan. 28
+
+* Skimmed through multiple references (see related literature). There appears to be many works that are very similar but under different titles (presumably previous versions of the same work). Some seem to have been extended while stuck in limbo (arXiv) which leads to confusion about chronological ordering of works.
+
 ## Jan. 27
 ### Dobriban, 2019
 
