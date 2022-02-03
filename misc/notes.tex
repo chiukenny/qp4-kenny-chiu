@@ -265,6 +265,27 @@ x_{t+1} = x_t +a = x_t - \frac{f'(x_t)}{f''(x_t)} \;.
 \]
 
 
+\subsection{Underdetermined least squares}
+
+Is there anything interesting about IHS in the underdetermined least squares case?
+\begin{itemize}
+
+\item
+For example, gradient descent in underdetermined least squares converges to the minimum norm solution (assuming solution initialized in orthogonal complement of null space of data matrix, i.e., row space). \\
+\href{https://arxiv.org/pdf/1705.09280.pdf}{Implicit Regularization in Matrix Factorization}; \href{https://math.stackexchange.com/questions/3451272/does-gradient-descent-converge-to-a-minimum-norm-solution-in-least-squares-probl}{SE}
+
+\item
+If $n\ll d$, does it make more sense to reduce the feature dimension, i.e., $\tilde{A}=AS$ for $A$ $n times d$, $S$ $d\times m$, $m\ll d$? For fixed sketches? Otherwise are there any computational savings from sketching? Note $A^TA$ not invertible in this case but $AA^T$ is. \\
+\href{https://proceedings.neurips.cc/paper/2019/file/51425b752a0b402ed3effc83fc4bbb74-Paper.pdf}{High-Dimensional Optimization in Adaptive Random Subspaces}: uses right sketching matrix, works with $AA^T$. \\
+\href{https://arxiv.org/pdf/2006.05874.pdf}{Effective Dimension Adaptive Sketching Methods for Faster Regularized Least-Squares Optimization}: dual of underdetermined is overdetermined problem?
+
+\item
+Ridge regression allows for an unique solution. \\
+\href{https://proceedings.mlr.press/v80/chowdhury18a/chowdhury18a.pdf}{An Iterative, Sketching-based Framework for Ridge Regression}
+
+\end{itemize}
+
+
 \subsection{Related literature}
 
 \begin{itemize}
@@ -276,8 +297,7 @@ Extensions of IHS: \\
 \href{https://proceedings.mlr.press/v119/lacotte20a/lacotte20a.pdf}{Optimal Randomized First-Order Methods for Least-Squares Problems}: extension of current work with non-refreshed sketches \\
 \href{https://arxiv.org/pdf/2105.07291.pdf}{Adaptive Newton Sketch: Linear-time Optimization with Quadratic Convergence and Effective Hessian Dimensionality} \\
 \href{https://arxiv.org/pdf/2107.07480.pdf}{Newton-LESS: Sparsification without Trade-offs for the Sketched Newton Update}: sparse IHS? \\
-\href{https://proceedings.neurips.cc/paper/2019/file/1f36c15d6a3d18d52e8d493bc8187cb9-Paper.pdf}{Asymptotics for Sketching in Least Squares}: referenced paper in current work; compares one-step sketch matrices \\
-\href{https://arxiv.org/pdf/2006.05874.pdf}{Effective Dimension Adaptive Sketching Methods for Faster Regularized Least-Squares Optimization}: related?, probably not worth mentioning
+\href{https://proceedings.neurips.cc/paper/2019/file/1f36c15d6a3d18d52e8d493bc8187cb9-Paper.pdf}{Asymptotics for Sketching in Least Squares}: referenced paper in current work; compares one-step sketch matrices
 
 \item
 Applications: \\
@@ -288,7 +308,26 @@ Possibly helpful: \\
 \href{https://arxiv.org/pdf/2201.00450.pdf}{On randomized sketching algorithms and the Tracy-Widom law} \\
 \href{https://arxiv.org/pdf/1609.00048.pdf}{Practical sketching algorithms for low-rank matrix approximation} \\
 \href{https://www.jmlr.org/papers/volume17/15-440/15-440.pdf}{A Statistical Perspective on Randomized Sketching for Ordinary Least-Squares}: complementary to 2016 IHS paper \\
-\href{https://dl.acm.org/doi/10.1145/3034786.3056119}{Efficient Matrix Sketching over Distributed Data}: PCA?
+\href{https://dl.acm.org/doi/10.1145/3034786.3056119}{Efficient Matrix Sketching over Distributed Data}: PCA? \\
+\href{https://epubs.siam.org/doi/pdf/10.1137/15M1025487}{Randomized Iterative Methods for Linear Systems}: classical sketch \\
+\href{https://arxiv.org/pdf/1507.02268.pdf}{Optimal approximate matrix product in terms of stable rank}: error bounds on matrix approximations
+
+\item
+Related to expectation of solution? \\
+\href{https://arxiv.org/pdf/1906.11809v1.pdf}{High-Dimensional Optimization in Adaptive Random Subspaces} \\
+\href{https://projecteuclid.org/journals/annals-of-statistics/volume-45/issue-3/Randomized-sketches-for-kernels-Fast-and-optimal-nonparametric-regression/10.1214/16-AOS1472.full}{Randomized sketches for kernels: Fast and optimal nonparametric regression}
+
+\item
+Underdetermined? \\
+\href{https://arxiv.org/pdf/2006.05874.pdf}{Effective Dimension Adaptive Sketching Methods for Faster Regularized Least-Squares Optimization}: refreshed embeddings does not improve on fixed embedding?
+\begin{itemize}
+\item
+\href{https://arxiv.org/pdf/1911.02675.pdf}{Faster Least Squares Optimization}
+\item
+\href{https://proceedings.mlr.press/v119/lacotte20a/lacotte20a.pdf}{Optimal Randomized First-Order Methods for Least-Squares Problems}: first-order method with fixed sketches that provide better guarantees.
+\end{itemize}
+\href{https://arxiv.org/pdf/1511.07263.pdf}{Input Sparsity Time Low-Rank Approximation via Ridge Leverage Score Sampling} \\
+\href{https://proceedings.mlr.press/v80/chowdhury18a/chowdhury18a.pdf}{An Iterative, Sketching-based Framework for Ridge Regression}
 
 \end{itemize}
 
