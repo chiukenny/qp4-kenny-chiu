@@ -1,3 +1,7 @@
+## Feb. 2-4
+
+* Started thinking about possible project proposals and reviewing the underdetermined least squares, quantile regression and related literatures for ideas.
+
 ## Jan. 28
 
 * Finished first draft of summary.

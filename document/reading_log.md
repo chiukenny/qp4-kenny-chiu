@@ -1,3 +1,11 @@
+## Feb. 4
+### [Pilanci, 2017](https://stanford.edu/~pilanci/papers/PilWai17.pdf)
+
+* Paper proposes Newton sketch which generalizes IHS to general constrained and unconstrained convex optimization problems. One difference is that in least squares problems, the unsketched Hessian is the same across iterations.
+* For d > n problems, a dual strategy exists that provides same guarantees as n > d problems.
+* For linear programming problems with n constraints and d dimensions, standard Newton's method for barrier method is O(nd^2) whereas with ROS sketching is O(ndlog(m)+md^2). Sketching is cheaper for n >> d. Partial sketching strategies for additive optimization functions where the Hessians of some subfunctions are sketched and others are retained exactly are also possible.
+* Size m lower bound is dependent on a specified tolerance and the Gaussian width of a cone space for the given problem. Euclidean error decays at a linear-quadratic convergence rate.
+
 ## Feb. 2
 ### [Chowdhury, 2018](https://proceedings.mlr.press/v80/chowdhury18a/chowdhury18a.pdf)
 
