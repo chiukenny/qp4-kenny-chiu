@@ -1,3 +1,7 @@
+## Feb. 5
+
+* Started proposal 1 (sketched interior point algorithm for quantile regression).
+
 ## Feb. 2-4
 
 * Started thinking about possible project proposals and reviewing the underdetermined least squares, quantile regression and related literatures for ideas.

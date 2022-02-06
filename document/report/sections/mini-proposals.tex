@@ -5,9 +5,49 @@
 \section{Mini-proposals}
 
 % each mini-proposal gets its own subsection
-\subsection{Proposal 1: MY PROPOSAL TITLE} % enter your proposal title
+\subsection{Proposal 1: A sketched interior point algorithm for quantile regression} % enter your proposal title
 
-\todo Sketching for quantile regression? Sketched interior point methods which are based on newton; sketching in smoothed problems?
+Whereas linear regression fits a linear model on the conditional mean, quantile regression~\citep{Koenker:1978} fits a linear model on a conditional quantile. Quantile regression offers several advantages over linear regression, such as being able to model different quantiles (as opposed to only a mean), being free from assumptions regarding the parametric form of the response and homoscedasticity, and being transformation equivariant in its response~\citep{Rodriguez:2017}. Given a data matrix $\bfX\in\bbR^{n\times d}$, observations $\bfy\in\bbR^{n}$ and a quantile $\tau\in(0,1)$, the estimated parameters of the linear model are the solution to the optimization problem
+\[
+\min_{\bfb\in\bbR^d} \; \sum_{i=1}^n(y_i-\bfx_i^\T\bfb)\left(\tau - \mathbbm{1}[y_i-\bfx_i^\top\bfb < 0]\right) \;.
+\]
+The problem is non-differentiable but can be optimized as a linear program. For large datasets, the conventional approach to solving the linear program is to use a constrained primal-dual interior point method~\citep{Portnoy:1997}. The interior point method involves iterative updates that are obtained as the solution to a linear system derived from a Newton step. The computational bottleneck in each update comes from  computing $\bfX^\T\bfW_t\bfX$ where $\bfW_t$ is a diagonal matrix that changes every iteration~\citep{Chen:2005}. This computation results in each iteration having a cost of $O(nd^2)$.
+\\
+
+The interior point method scales with both the number of data points $n$ and the number of covariates $d$. In this proposal, we consider the case where $d\ll n$ and propose a stochastic interior point algorithm that uses sketching matrices for reducing the computational cost of the iterative updates. Drawing on proven methods in the sketching literature~\cite{Pilanci:2017}, the idea is to incorporate a partial sketching step into the original algorithm where instead of computing $\bfX^\T\bfW_t\bfX$, we compute
+\[
+\bfX^\T\bfW_t^\frac{1}{2}\bfS_t^\T\bfS_t\bfW_t^\frac{1}{2}\bfX \;.
+\]
+The matrix $\bfS_t\in\bbR^{m\times n}$, $m\ll n$, is a random matrix regenerated every iteration that is introduced for reducing the dimension. For example, the subsampled randomized Hadamard transform allows the sketch $\bfS_t\bfW_t^\frac{1}{2}\bfX$ to be formed at a cost of $O(nd\log m)$~\citep{Lacotte:2020}, and the matrix product above can then be computed at a cost of $O(md^2)$. While the sketched solution will only be an approximation to the original solution, recent work on the convergence of sketched solutions in other optimization problems show promising theoretical and empirical results~\citep[e.g.,][]{Pilanci:2017,Derezinski:2021,Lacotte:2021}. We also note that \citet{Yang:2013} had previously proposed a stochastic algorithm for quantile regression. However, their method differs greatly from ours in that they construct a random preconditioning matrix before carrying out quantile regression on the conditioned data matrix.
+\\
+
+The main contributions of this project would be as follows:
+\begin{enumerate}
+\item
+A sketched interior point algorithm for optimizing quantile regression problems that is expected to be faster than standard methods currently used in practice.
+\item
+A theoretical analysis of the proposed sketched interior point algorithm that provides convergence guarantees.
+\item
+An empirical comparison of large data quantile regression models obtained from the proposed sketched interior point algorithm and other existing methods, such as the standard interior point method~\citep{Portnoy:1997} (implemented in R), the existing stochastic method~\citep{Yang:2013}, \todo recent interior point method Zhao:2020, smoothing method He, Pan, Tan, and Zhou (2020) (implemented in R)
+\item
+An implemention of this algorithm, e.g., in R.
+\end{enumerate}
+
+Challenges:
+\begin{enumerate}
+\item
+Theory: analysis approach of original newton sketch may work; asymptotic theory like that of \citep{Lacotte:2020} may need work to be adapted
+\end{enumerate}
+
+Possible future directions:
+\begin{enumerate}
+\item
+$n\ll d$ case
+\item
+Sketched smooth method
+\item
+Application of sketched interior point algorithm to other problems that use the standard algorithm
+\end{enumerate}
 
 
 % each mini-proposal gets its own subsection
