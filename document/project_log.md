@@ -1,3 +1,7 @@
+## Feb. 6
+
+* Finished draft of proposal 1.
+
 ## Feb. 5
 
 * Started proposal 1 (sketched interior point algorithm for quantile regression).
