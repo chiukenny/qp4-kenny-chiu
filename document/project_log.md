@@ -1,3 +1,7 @@
+## Feb. 9
+
+* Started looking into ridge regression for project.
+
 ## Feb. 6
 
 * Finished draft of proposal 1.

@@ -200,7 +200,119 @@ System of equations
 \href{https://github.com/jonathanlctt/ihs_srht}{GitHub}
 
 
+
 \newpage
+
+
+
+\section{Ridge regression}
+
+\begin{itemize}
+\item
+\href{https://www.jmlr.org/papers/volume18/17-313/17-313.pdf}{Sketched Ridge Regression: Optimization Perspective, Statistical Perspective, and Model Averaging}
+\item
+\href{https://arxiv.org/pdf/1511.07263.pdf}{Input Sparsity Time Low-Rank Approximation via Ridge Leverage Score Sampling}
+\item
+\href{https://proceedings.mlr.press/v80/chowdhury18a/chowdhury18a.pdf}{An Iterative, Sketching-based Framework for Ridge Regression}: focuses on underdetermined case $d\gg n$
+\end{itemize}
+
+Ridge regression--does not need assumption that $\bfX$ is full rank?:
+\begin{align*}
+&\argmin_{\bfb\in\bbR^d} \frac{1}{2}\|\bfX\bfb-\bfy\|^2 + \frac{\lambda}{2}\|\bfb\|^2 \\
+&= \argmin_{\bfb\in\bbR^d} \frac{1}{2}\left(\bfb^\T\bfX^\T\bfX\bfb - 2\bfb^\T\bfX^\T\bfy + \bfy^T\bfy\right) + \frac{\lambda}{2}\bfb^T\bfb \\
+\end{align*}
+Gradient:
+\[
+\nabla f(\bfb_t) = \bfX^\T\bfX\bfb_t - \bfX^\T\bfy + \lambda\bfb_t = \left(\bfX^\T\bfX+\lambda\bfI_d\right)\bfb_t - \bfX^\T\bfy
+\]
+Note: the following are equivalent solutions (useful for overdetermined, underdetermined case?)
+\begin{align*}
+\bfb^* &= \left(\bfX^\T\bfX+\lambda\bfI_d\right)^{-1}\bfX^\T\bfb \\
+\bfb^* &= \bfX^\T\left(\bfX\bfX^\T+\lambda\bfI_n\right)^{-1}\bfb
+\end{align*}
+Hessian and partial Newton sketch:
+\begin{align*}
+\bfH &= \bfX^\T\bfX+\lambda\bfI_d \\
+\bfH_t &= \bfX^\T\bfS_t^\T\bfS_t\bfX + \lambda\bfI_d
+\end{align*}
+IHS with no momentum and partial sketch:
+\begin{align*}
+\bfb_{t+1} &= \bfb_t - \alpha_t\bfH_t^{-1}\nabla f(\bfb_t) \\
+\bfb_{t+1} &= \bfb_t - \alpha_t\left(\bfX^\T\bfS_t^\T\bfS_t\bfX + \lambda\bfI_d\right)^{-1}\left(\left(\bfX^\T\bfX+\lambda\bfI_d\right)\bfb_t-\bfX^\T\bfy\right) \\
+&= \bfb_t - \alpha_t\left(\bfX^\T\bfS_t^\T\bfS_t\bfX + \lambda\bfI_d\right)^{-1}\left(\left(\bfX^\T\bfX+\lambda\bfI_d\right)\bfb_t-\left(\bfX^\T\bfX+\lambda\bfI_d\right)\bfb^*\right) \\
+&= \bfb_t - \alpha_t\left(\bfX^\T\bfS_t^\T\bfS_t\bfX + \lambda\bfI_d\right)^{-1}\left(\bfX^\T\bfX+\lambda\bfI_d\right)\left(\bfb_t-\bfb^*\right) \\
+\bfX\bfb_{t+1} - \bfX\bfb^* &= \bfX\bfb_t - \alpha_t\bfX\left(\bfX^\T\bfS_t^\T\bfS_t\bfX + \lambda\bfI_d\right)^{-1}\left(\bfX^\T\bfX+\lambda\bfI_d\right)\left(\bfb_t-\bfb^*\right) - \bfX\bfb^* \\
+&= \bfX\bfb_t - \alpha_t\left(\bfQ_t\bfb_t-\bfQ_t\bfb^*\right) - \bfX\bfb^*
+\end{align*}
+Let $\bfX = \bfU\Sigma\bfV^\T$ where $\bfU$, $\bfV$ orthogonal and $\Sigma$ diagonal. \todo: take compact SVD? might break if multiplying by $\bfX$
+\begin{align*}
+\bfX^\T\bfX+\lambda\bfI_d &= \bfV\Sigma^\T\Sigma\bfV^\T + \lambda \bfV\bfV^\T \\
+&= \bfV\left(\Sigma^\T\Sigma + \lambda\bfI_d\right)\bfV^\T \\
+\left(\bfX^\T\bfS_t^\T\bfS_t\bfX + \lambda\bfI_d\right)^{-1} &= \left(\bfV\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma\bfV^\T + \lambda\bfV\bfV^\T\right)^{-1} \\
+&= \bfV\left(\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\bfV^\T
+\end{align*}
+Then
+\begin{align*}
+\bfb_{t+1} &= \bfb_t - \alpha_t\left(\bfX^\T\bfS_t^\T\bfS_t\bfX + \lambda\bfI_d\right)^{-1}\left(\bfX^\T\bfX+\lambda\bfI_d\right)\left(\bfb_t-\bfb^*\right) \\
+&= \bfb_t - \alpha_t\bfV\left(\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\left(\Sigma^\T\Sigma + \lambda\bfI_d \right)\bfV^\T\left(\bfb_t-\bfb^*\right) \\
+\bfV^\T(\bfb_{t+1}-\bfb^*) &= \bfV^\T\bfb_t - \alpha_t\left(\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\left(\Sigma^\T\Sigma + \lambda\bfI_d\right)\bfV^\T\left(\bfb_t-\bfb^*\right) - \bfV^\T\bfb^* \\
+&= \left(\bfI_d - \alpha_t\left(\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\left(\Sigma^\T\Sigma + \lambda\bfI_d\right)\right)\bfV^\T\left(\bfb_t-\bfb^*\right) \\
+\|\bfb_{t+1}-\bfb^*\|^2 &= \left(\bfb_t-\bfb^*\right)^\T\bfV\left(\bfI_d - \alpha_t\left(\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\left(\Sigma^\T\Sigma + \lambda\bfI_d\right)\right)^2\bfV^\T \left(\bfb_t-\bfb^*\right)
+\end{align*}
+
+\todo: take $\Delta_t=\bfV^\T(\bfb_t-\bfb^*)$? Interpretation in terms of solution error?
+\begin{align*}
+\|\Delta_{t+1}\|^2 &= \|\bfV^\T\left(\bfb_{t+1}-\bfb^*\right)\|^2 \\
+&= \|\bfb_{t+1}-\bfb^*\|^2
+\end{align*}
+\begin{align*}
+\|\Delta_{t+1}\|^2 &= \Delta_t^\T\left(\bfI_d - \alpha_t\left(\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\left(\Sigma^\T\Sigma + \lambda\bfI_d\right)\right)^2\Delta_t
+\end{align*}
+
+\todo: $\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma$ some transformation of sketch?
+
+
+\subsection{Scratch notes}
+
+Newton's method with least squares:
+\begin{align*}
+\bfb_{t+1} &= \bfb_t - \alpha_t\bfH_t^{-1}\nabla f(\bfb_t) \\
+\bfb_{t+1} &= \bfb_t - \alpha_t\left(\bfX^\T\bfX\right)^{-1}\left(\bfX^\T\bfX\bfb_t-\bfX^\T\bfy\right) \\
+&= \bfb_t - \alpha_t\left(\bfb_t-\left(\bfX^\T\bfX\right)^{-1}\bfX^\T\bfy\right) \\
+\bfX\bfb_{t+1} &= \bfX\bfb_t - \alpha_t\left(\bfX\bfb_t-\bfX\left(\bfX^\T\bfX\right)^{-1}\bfX^\T\bfy\right) \\
+\bfX(\bfb_{t+1}-\bfb^*) &= \bfX\bfb_t - \alpha_t\left(\bfX\bfb_t-\bfX\left(\bfX^\T\bfX\right)^{-1}\bfX^\T\bfy\right) - \bfX\bfb^* \\
+&= \bfX\bfb_t - \alpha_t\left(\bfX\bfb_t-\bfX\bfb^*\right) - \bfX\bfb^* \\
+&= \left(\bfI_n - \alpha_t\bfI_n\right)\bfX(\bfb_t-\bfb^*)
+\end{align*}
+IHS: let $\bfX=\bfU\Sigma\bfV^\T$ where $\bfU$, $\bfV$ orthogonal and $\Sigma$ diagonal. Then
+\begin{align*}
+\bfX\left(\bfX^\T\bfS_t^\T\bfS_t\bfX\right)^{-1}\bfX^T &= \bfU\Sigma\bfV^\T\left(\bfV\Sigma\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma\bfV^\T\right)^{-1}\bfV\Sigma\bfU^\T \\
+&= \bfU\left(\bfU^\T\bfS_t^\T\bfS_t\bfU\right)^{-1}\bfU^\T
+\end{align*}
+\begin{align*}
+\bfb_{t+1} &= \bfb_t - \alpha_t\left(\bfX^\T\bfS_t^\T\bfS_t\bfX\right)^{-1}\left(\bfX^\T\bfX\bfb_t-\bfX^\T\bfy\right) \\
+&= \bfb_t - \alpha_t\left(\bfX^\T\bfS_t^\T\bfS_t\bfX\right)^{-1}\bfX^\T\bfX(\bfb_t-\bfb^*) \\
+\bfX\bfb_{t+1} - \bfX\bfb^* &= \bfX\bfb_t - \alpha_t\bfX\left(\bfX^\T\bfS_t^\T\bfS_t\bfX\right)^{-1}\bfX^\T\bfX(\bfb_t-\bfb^*) - \bfX\bfb^* \\
+&= \bfX\bfb_t - \alpha_t\bfU\left(\bfU^\T\bfS_t^\T\bfS_t\bfU\right)^{-1}\bfU^\T\bfX(\bfb_t-\bfb^*) - \bfX\bfb^* \\
+&= \left(\bfI_n - \alpha_t\bfU\left(\bfU^\T\bfS_t^\T\bfS_t\bfU\right)^{-1}\bfU^\T\right)\bfX(\bfb_t-\bfb^*)
+\end{align*}
+Let $\Delta_t = \bfU^\T\bfX(\bfb_t-\bfb^*)$. Then
+\begin{align*}
+\Delta_{t+1} &= \left(\bfU^\T - \alpha_t\bfU^\T\bfU\left(\bfU^\T\bfS_t^\T\bfS_t\bfU\right)^{-1}\bfU^\T\right)\bfX(\bfb_t-\bfb^*) \\
+&= \left(\bfI_d - \alpha_t\left(\bfU^\T\bfS_t^\T\bfS_t\bfU\right)^{-1}\right)\Delta_t \\
+\|\Delta_{t+1}\|^2 &= \Delta_t^\T\left(\bfI_d - \alpha_t\left(\bfU^\T\bfS_t^\T\bfS_t\bfU\right)^{-1}\right)\Delta_t
+\end{align*}
+
+Note: Hessian approximated before simplification; otherwise work does not follow
+\begin{align*}
+\bfX(\bfb_{t+1}-\bfb^*) &= \bfX\bfb_t - \alpha_t\left(\bfX\bfb_t-\bfX\left(\bfX^\T\bfS_t^\T\bfS_t\bfX\right)^{-1}\bfX^\T\bfy\right) - \bfX\bfb^* \\
+&= \bfX\bfb_t - \alpha_t\left(\bfX\bfb_t-\bfU\left(\bfU^\T\bfS_t^\T\bfS_t\bfU\right)^{-1}\bfU^\T\bfy\right) - \bfX\bfb^*
+\end{align*}
+
+
+
+\newpage
+
 
 
 \section{Scratch notes}
@@ -361,8 +473,6 @@ Underdetermined? \\
 \item
 \href{https://proceedings.mlr.press/v119/lacotte20a/lacotte20a.pdf}{Optimal Randomized First-Order Methods for Least-Squares Problems}: first-order method with fixed sketches that provide better guarantees.
 \end{itemize}
-\href{https://arxiv.org/pdf/1511.07263.pdf}{Input Sparsity Time Low-Rank Approximation via Ridge Leverage Score Sampling} \\
-\href{https://proceedings.mlr.press/v80/chowdhury18a/chowdhury18a.pdf}{An Iterative, Sketching-based Framework for Ridge Regression}
 
 \end{itemize}
 
