@@ -266,10 +266,39 @@ Then
 &= \|\bfb_{t+1}-\bfb^*\|^2
 \end{align*}
 \begin{align*}
-\|\Delta_{t+1}\|^2 &= \Delta_t^\T\left(\bfI_d - \alpha_t\left(\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\left(\Sigma^\T\Sigma + \lambda\bfI_d\right)\right)^2\Delta_t
+\|\Delta_{t+1}\|^2 &= \Delta_t^\T\left(\bfI_d - \alpha_t\left(\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\left(\Sigma^\T\Sigma + \lambda\bfI_d\right)\right)^2\Delta_t \\
+\E\left[\|\Delta_{t+1}\|^2\right] &= \Delta_t^\T\E\left[\left(\bfI_d - \alpha_t\left(\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\left(\Sigma^\T\Sigma + \lambda\bfI_d\right)\right)^2\right]\Delta_t \\
+&= \Delta_t^\T\left(\bfI_d - 2\alpha_t\E\left[\left(\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\right]\left(\Sigma^\T\Sigma + \lambda\bfI_d\right)\right. \\
+&\quad + \left. \alpha_t^2\E\left[\left(\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma+ \lambda\bfI_d\right)^{-2}\right]\left(\Sigma^\T\Sigma + \lambda\bfI_d\right)^2\right)\Delta_t
 \end{align*}
+$\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma$ is positive semidefinite and $\lambda\bfI_d$ is positive definite. Then $\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d$ is positive definite. Consider the eigendecomposition $\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d = \bfQ\Lambda\bfQ^\T$ where $\Lambda$ is diagonal with positive entries $\lambda_1,\ldots,\lambda_d$ and $\bfQ\in\bbR^{d\times d}$ is orthogonal. \todo: can't make rotational invariance argument? Can method for Theorem~4.1 be used here?
+\\
 
-\todo: $\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma$ some transformation of sketch?
+Assuming $\bfX$ full rank, if taking $\bfX=\bfU\Sigma\bfV^\T$ as thin SVD:
+\begin{align*}
+\bfb_{t+1} &= \bfb_t - \alpha_t\bfV\left(\Sigma\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\left(\Sigma^2 + \lambda\bfI_d \right)\bfV^\T\left(\bfb_t-\bfb^*\right) \\
+&= \bfb_t - \alpha_t\bfV\Sigma^{-1}\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\Sigma + \lambda\Sigma^{-1} \right)\bfV^\T\left(\bfb_t-\bfb^*\right) \\
+&= \bfb_t - \alpha_t\bfV\Sigma^{-1}\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2} \right)\Sigma\bfV^\T\left(\bfb_t-\bfb^*\right)
+\end{align*}
+If $\Delta_t=\Sigma\bfV^\T\left(\bfb_t-\bfb^*\right)$:
+\begin{align*}
+\Sigma\bfV^\T(\bfb_{t+1}-\bfb^*) &= \Sigma\bfV^\T\bfb_t - \alpha_t\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)\Sigma\bfV^\T\left(\bfb_t-\bfb^*\right) - \Sigma\bfV^\T\bfb^* \\
+&= \left(\bfI_d - \alpha_t\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)\right)\Sigma\bfV^\T\left(\bfb_t-\bfb^*\right) \\
+\|\Delta_{t+1}\|^2 &= \Delta_t^\T\left(\bfI_d - \alpha_t\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)\right)^2\Delta_t \\
+\E\left[\|\Delta_{t+1}\|^2\right] &= \Delta_t^\T\E\left[\left(\bfI_d - \alpha_t\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)\right)^2\right]\Delta_t 
+\end{align*}
+If $\Delta_t=\bfU^\T\bfX\left(\bfb_t-\bfb^*\right)$:
+\begin{align*}
+\bfX(\bfb_{t+1}-\bfb^*) &= \bfX\bfb_t - \alpha_t\bfU\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)\Sigma\bfV^\T\left(\bfb_t-\bfb^*\right) - \bfX\bfb^* \\
+&= \left(\bfI_d - \alpha_t\bfU\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)\bfU^T\right)\bfX\left(\bfb_t-\bfb^*\right) \\
+\bfU^\T\bfX(\bfb_{t+1}-\bfb^*) &= \left(\bfU^\T - \alpha_t\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)\bfU^T\right)\bfX\left(\bfb_t-\bfb^*\right) \\
+&= \left(\bfI_d - \alpha_t\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)\right)\bfU^\T\bfX\left(\bfb_t-\bfb^*\right) \\
+\Delta_{t+1} &= \left(\bfI_d - \alpha_t\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)\right)\Delta_t \\
+\|\Delta_{t+1}\|^2 &= \Delta_t^\T\left(\bfI_d - \alpha_t\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)\right)^2\Delta_t \\
+\E\left[\|\Delta_{t+1}\|^2\right] &= \Delta_t^\T\E\left[\left(\bfI_d - \alpha_t\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)\right)^2\right]\Delta_t  \\
+&= \Delta_t^\T\left(\bfI_d - 2\alpha_t\E\left[\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right) \right. \\
+&\quad + \left. \alpha_t^2\E\left[\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-2}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right)^2\right)\Delta_t 
+\end{align*}
 
 
 \subsection{Scratch notes}

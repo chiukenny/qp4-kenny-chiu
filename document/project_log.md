@@ -1,3 +1,7 @@
+## Feb. 11
+
+* Continued with ridge regression theory. One obstacle in proof of Theorem 3.1 seems to be the use of rotational invariance of matrix. Corresponding matrix in ridge regression does not seem to have this property. Approach for Theorem 4.1 likely may work under additional initialization assumptions.
+
 ## Feb. 9
 
 * Started looking into ridge regression for project.
