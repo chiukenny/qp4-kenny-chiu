@@ -227,10 +227,10 @@ Gradient:
 \]
 Note: the following are equivalent solutions (useful for overdetermined, underdetermined case?)
 \begin{align*}
-\bfb^* &= \left(\bfX^\T\bfX+\lambda\bfI_d\right)^{-1}\bfX^\T\bfb \\
-\bfb^* &= \bfX^\T\left(\bfX\bfX^\T+\lambda\bfI_n\right)^{-1}\bfb
+\bfb^* &= \left(\bfX^\T\bfX+\lambda\bfI_d\right)^{-1}\bfX^\T\bfy \\
+\bfb^* &= \bfX^\T\left(\bfX\bfX^\T+\lambda\bfI_n\right)^{-1}\bfy
 \end{align*}
-Hessian and partial Newton sketch:
+Hessian and partial Newton sketch (also considered by \citet{Chowdhury:2018}):
 \begin{align*}
 \bfH &= \bfX^\T\bfX+\lambda\bfI_d \\
 \bfH_t &= \bfX^\T\bfS_t^\T\bfS_t\bfX + \lambda\bfI_d
@@ -268,8 +268,9 @@ Then
 \begin{align*}
 \|\Delta_{t+1}\|^2 &= \Delta_t^\T\left(\bfI_d - \alpha_t\left(\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\left(\Sigma^\T\Sigma + \lambda\bfI_d\right)\right)^2\Delta_t \\
 \E\left[\|\Delta_{t+1}\|^2\right] &= \Delta_t^\T\E\left[\left(\bfI_d - \alpha_t\left(\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\left(\Sigma^\T\Sigma + \lambda\bfI_d\right)\right)^2\right]\Delta_t \\
-&= \Delta_t^\T\left(\bfI_d - 2\alpha_t\E\left[\left(\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\right]\left(\Sigma^\T\Sigma + \lambda\bfI_d\right)\right. \\
-&\quad + \left. \alpha_t^2\E\left[\left(\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma+ \lambda\bfI_d\right)^{-2}\right]\left(\Sigma^\T\Sigma + \lambda\bfI_d\right)^2\right)\Delta_t
+&= \Delta_t^\T\left(\bfI_d - \alpha_t\E\left[\left(\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\right]\left(\Sigma^\T\Sigma + \lambda\bfI_d\right) \right.  \\
+&\quad- \alpha_t\left(\Sigma^\T\Sigma + \lambda\bfI_d\right)\E\left[\left(\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\right] \\
+&\quad + \left. \alpha_t^2\left(\Sigma^\T\Sigma + \lambda\bfI_d\right)\E\left[\left(\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma+ \lambda\bfI_d\right)^{-2}\right]\left(\Sigma^\T\Sigma + \lambda\bfI_d\right)\right)\Delta_t
 \end{align*}
 $\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma$ is positive semidefinite and $\lambda\bfI_d$ is positive definite. Then $\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d$ is positive definite. Consider the eigendecomposition $\Sigma^\T\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d = \bfQ\Lambda\bfQ^\T$ where $\Lambda$ is diagonal with positive entries $\lambda_1,\ldots,\lambda_d$ and $\bfQ\in\bbR^{d\times d}$ is orthogonal. \todo: can't make rotational invariance argument? Can method for Theorem~4.1 be used here?
 \\
@@ -296,16 +297,49 @@ If $\Delta_t=\bfU^\T\bfX\left(\bfb_t-\bfb^*\right)$:
 \Delta_{t+1} &= \left(\bfI_d - \alpha_t\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)\right)\Delta_t \\
 \|\Delta_{t+1}\|^2 &= \Delta_t^\T\left(\bfI_d - \alpha_t\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)\right)^2\Delta_t \\
 \E\left[\|\Delta_{t+1}\|^2\right] &= \Delta_t^\T\E\left[\left(\bfI_d - \alpha_t\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)\right)^2\right]\Delta_t  \\
-&= \Delta_t^\T\left(\bfI_d - 2\alpha_t\E\left[\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right) \right. \\
-&\quad + \left. \alpha_t^2\E\left[\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-2}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right)^2\right)\Delta_t 
+&= \Delta_t^\T\left(\bfI_d - \alpha_t\E\left[\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right) \right. \\
+&\quad - \alpha_t\left(\bfI_d + \lambda\Sigma^{-2}\right)\E\left[\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\right] \\
+&\quad + \left. \alpha_t^2\left(\bfI_d + \lambda\Sigma^{-2}\right)\E\left[\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-2}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right)\right)\Delta_t 
 \end{align*}
+
+\todo Assuming $\bfQ_t=\bfI_d - \alpha_t\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)$ satisfies conditions (limiting spectral distribution as $n\rightarrow\infty$ and others?), under the additional assumption that $\Delta_0$ is random and $\E\left[\Delta_0\Delta_0^\T\right]=\frac{\bfI_d}{d}$, we have $\Delta_{t+1}=Q_t\Delta_t$ and so
+\begin{align*}
+\E\left[\|\Delta_{t+1}\|^2\right] &= \mathrm{trace}\left(\E\left[\Delta_0^\T\bfQ_0\ldots \bfQ_{t-1}\bfQ_{t-1}\ldots\bfQ_0\Delta_0\right]\right) \\
+&= \mathrm{trace}\left(\E\left[\bfQ_0\ldots \bfQ_{t-1}\bfQ_{t-1}\ldots\bfQ_0\Delta_0\Delta_0^\T\right]\right) \\
+&= \mathrm{trace}\left(\E\left[\bfQ_0\ldots \bfQ_{t-1}\bfQ_{t-1}\ldots\bfQ_0\right]\E\left[\Delta_0\Delta_0^\T\right]\right) \\
+&= \frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_0\ldots \bfQ_{t-1}\bfQ_{t-1}\ldots\bfQ_0\right]\right)
+\end{align*}
+using the independence of $\Delta_0$ and $\bfQ_i$. Then
+\begin{align*}
+&& \E\left[\|\Delta_{t+1}\|^2\right] &= \frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_1\ldots \bfQ_{t-1}\bfQ_{t-1}\ldots\bfQ_0^2\right]\right) \\
+&\Rightarrow & \lim_{n\rightarrow\infty}\E\left[\|\Delta_{t+1}\|^2\right] &= \lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_1\ldots \bfQ_{t-1}\bfQ_{t-1}\ldots\bfQ_0^2\right]\right) \\
+&& &= \lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_0^2\right]\right)\lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_2\ldots \bfQ_{t-1}\bfQ_{t-1}\ldots\bfQ_1^2\right]\right) \\
+&&&= \prod_{i=0}^{t-1}\lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_i^2\right]\right)
+\end{align*}
+using the fact that $\bfQ_0^2$ is asymptotically free from $\bfQ_{t-1}\ldots\bfQ_1$ and recursing. The expectation of $\bfQ_i$ is given by
+\begin{align*}
+\E\left[\bfQ_i^2\right] &= \bfI_d - \alpha_i\E\left[\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-1}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right) \\
+&\quad - \alpha_i\left(\bfI_d + \lambda\Sigma^{-2}\right)\E\left[\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-1}\right] \\
+&\quad + \alpha_i^2\left(\bfI_d + \lambda\Sigma^{-2}\right)\E\left[\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-2}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right)
+\end{align*}
+and the normalized limiting trace is given by
+\begin{align*}
+\lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_i^2\right]\right) &= 1 - \frac{2\alpha_i}{d}\lim_{n\rightarrow\infty}\mathrm{trace}\left(\E\left[\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-1}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right)\right) \\
+&\quad + \frac{\alpha_i^2}{d}\lim_{n\rightarrow\infty}\mathrm{trace}\left(\E\left[\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-2}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right)^2\right)
+\end{align*}
+\todo problem: cannot derive limiting spectral distribution of $\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}$ following approach of Lemma~A.1 as matrix is not orthogonal.
+
+
+\subsection{Full Newton sketch}
+
+\todo: instead of sketching $\bfX^\T\bfX$, can we sketch $\bfX^\T\bfX+\lambda\bfI_d$? For example, take Cholesky decomposition $\bfX^\T\bfX+\lambda\bfI_d = \bfA\bfA^\T$ and sketch $\bfA\bfS^\T\bfS\bfA^\T$. We only have to compute Cholesky once, but $\bfX^\T\bfX+\lambda\bfI_d$ still needs to be computed beforehand. Are there still computational benefits of sketching in this case?
 
 
 \subsection{Scratch notes}
 
 Newton's method with least squares:
 \begin{align*}
-\bfb_{t+1} &= \bfb_t - \alpha_t\bfH_t^{-1}\nabla f(\bfb_t) \\
+\bfb_{t+1} &= \bfb_t - \alpha_t\bfH^{-1}\nabla f(\bfb_t) \\
 \bfb_{t+1} &= \bfb_t - \alpha_t\left(\bfX^\T\bfX\right)^{-1}\left(\bfX^\T\bfX\bfb_t-\bfX^\T\bfy\right) \\
 &= \bfb_t - \alpha_t\left(\bfb_t-\left(\bfX^\T\bfX\right)^{-1}\bfX^\T\bfy\right) \\
 \bfX\bfb_{t+1} &= \bfX\bfb_t - \alpha_t\left(\bfX\bfb_t-\bfX\left(\bfX^\T\bfX\right)^{-1}\bfX^\T\bfy\right) \\

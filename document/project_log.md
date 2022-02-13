@@ -1,3 +1,8 @@
+## Feb. 12
+
+* Attempted to follow Theorem 4.1 for ridge regression. An analogous result may be possible, but there are challenges such as not being able to give closed form expressions for the inverse moments.
+* Could an approach based on a full Newton sketch of the Hessian work?
+
 ## Feb. 11
 
 * Continued with ridge regression theory. One obstacle in proof of Theorem 3.1 seems to be the use of rotational invariance of matrix. Corresponding matrix in ridge regression does not seem to have this property. Approach for Theorem 4.1 likely may work under additional initialization assumptions.
