@@ -1,3 +1,9 @@
+## Feb. 13
+
+* Likely unable to make further progress on ridge regression theory. The full Newton sketch idea would not be helpful as the main problem of not being able to simplify expressions into orthogonal/Haar matrices remains.
+* Considered weighted least squares as another method to analyze, but the theory for ordinary least squares should apply to IWS rewritten as a regular LS problem.
+* Updated quantile regression proposal with more context.
+
 ## Feb. 12
 
 * Attempted to follow Theorem 4.1 for ridge regression. An analogous result may be possible, but there are challenges such as not being able to give closed form expressions for the inverse moments.

@@ -230,7 +230,7 @@ Note: the following are equivalent solutions (useful for overdetermined, underde
 \bfb^* &= \left(\bfX^\T\bfX+\lambda\bfI_d\right)^{-1}\bfX^\T\bfy \\
 \bfb^* &= \bfX^\T\left(\bfX\bfX^\T+\lambda\bfI_n\right)^{-1}\bfy
 \end{align*}
-Hessian and partial Newton sketch (also considered by \citet{Chowdhury:2018}):
+Hessian and partial Newton sketch (as considered by \citet{Chowdhury:2018}, \citet{Wang:2017}):
 \begin{align*}
 \bfH &= \bfX^\T\bfX+\lambda\bfI_d \\
 \bfH_t &= \bfX^\T\bfS_t^\T\bfS_t\bfX + \lambda\bfI_d
@@ -334,6 +334,8 @@ and the normalized limiting trace is given by
 
 \todo: instead of sketching $\bfX^\T\bfX$, can we sketch $\bfX^\T\bfX+\lambda\bfI_d$? For example, take Cholesky decomposition $\bfX^\T\bfX+\lambda\bfI_d = \bfA\bfA^\T$ and sketch $\bfA\bfS^\T\bfS\bfA^\T$. We only have to compute Cholesky once, but $\bfX^\T\bfX+\lambda\bfI_d$ still needs to be computed beforehand. Are there still computational benefits of sketching in this case?
 
+Not useful.
+
 
 \subsection{Scratch notes}
 
@@ -371,6 +373,23 @@ Note: Hessian approximated before simplification; otherwise work does not follow
 \bfX(\bfb_{t+1}-\bfb^*) &= \bfX\bfb_t - \alpha_t\left(\bfX\bfb_t-\bfX\left(\bfX^\T\bfS_t^\T\bfS_t\bfX\right)^{-1}\bfX^\T\bfy\right) - \bfX\bfb^* \\
 &= \bfX\bfb_t - \alpha_t\left(\bfX\bfb_t-\bfU\left(\bfU^\T\bfS_t^\T\bfS_t\bfU\right)^{-1}\bfU^\T\bfy\right) - \bfX\bfb^*
 \end{align*}
+
+
+
+\newpage
+
+
+
+\section{Weighted least squares}
+
+\begin{itemize}
+\item
+\href{https://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123570596.pdf}{An Analysis of Sketched IRLS for Accelerated Sparse Residual Regression}: iterative method based on classical sketch
+\end{itemize}
+Setup:
+\[
+\argmin_{\bfb\in\bbR^d} \frac{1}{2}\|\bfW\bfX\bfb-\bfW\bfy\|^2
+\]
 
 
 
@@ -416,6 +435,9 @@ One method to construct Haar unitary matrices: take $n\times n$ random matrix wi
 
 \item
 Marchenko-Pastur proof given in \citep{Couillet:2011}
+
+\item
+\href{https://arxiv.org/pdf/1302.5688.pdf}{Asymptotic liberating sequences}
 
 \end{itemize}
 
