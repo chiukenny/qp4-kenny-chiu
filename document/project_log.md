@@ -1,3 +1,7 @@
+## Feb. 15
+
+* Start organization of project report.
+
 ## Feb. 13
 
 * Likely unable to make further progress on ridge regression theory. The full Newton sketch idea would not be helpful as the main problem of not being able to simplify expressions into orthogonal/Haar matrices remains.
