@@ -6,29 +6,30 @@
 
 \subsection{Introduction}
 
-Ridge regression is a special case of regularized least squares where the penalty function is chosen to be the $\ell_2$-norm of the model parameters. Given data matrix $\bfX\in\bbR^{n\times d}$, observations $\bfy\in\bbR^n$ and a regularization parameter $\lambda>0$, ridge regression obtains estimates of the parameters as the solution to the problem
+Ridge regression is a special case of regularized least squares where the penalty function is chosen to be the $\ell_2$-norm of the model parameters. Given data matrix $\bfX\in\bbR^{n\times d}$, observations $\bfy\in\bbR^n$ and a regularization parameter $\lambda>0$, ridge regression obtains estimates of the parameters as the solution to the optimization problem
 \[
 \bfb^* = \argmin_{\bfb\in\bbR^d} \frac{1}{2}\|\bfX\bfb-\bfy\|^2 + \frac{\lambda}{2}\|\bfb\|^2 \;.
 \]
-While ridge regression can be motivated as a method to reduce overfitting in an ordinary least squares (OLS) model, it also has its computational and analytical benefits over OLS. When $\bfX$ does not have full column rank (e.g., when $n< d$), then $\bfX^\T\bfX$ is singular and the OLS solution is non-unique. When $\bfX$ is full rank but ill-conditioned, then small changes in $\bfX$ lead to large changes in $(\bfX^\T\bfX)^{-1}$ and consequently the OLS solution. Ridge regression addresses both of these issues by minimizing the variance and mean squared error at the cost of introducing a small bias~\citep{Chowdhury:2018}. The ridge regression solution is unique and is given by
+While ridge regression can be motivated as a method for reducing overfitting in ordinary least squares (OLS), it also has its computational and analytical benefits over OLS. When $\bfX$ does not have full column rank (e.g., when $n< d$), then $\bfX^\T\bfX$ is singular and the OLS solution is non-unique. When $\bfX$ is full rank but ill-conditioned, then small changes in $\bfX$ lead to large changes in $(\bfX^\T\bfX)^{-1}$ and consequently in the OLS solution. Ridge regression addresses both of these issues by minimizing the variance and mean squared error at the cost of introducing a small bias~\citep{Chowdhury:2018}. The ridge regression solution is unique and is given by
 \[
 \bfb^* = \left(\bfX^\T\bfX + \lambda\bfI_d\right)^{-1}\bfX^\T\bfy \;.
 \]
-In this report, we consider a sketched version \todo
+In this report, we analyze the theoretical properties of a partial Newton sketch algorithm~\citep{Pilanci:2017} as an iterative solver for the ridge regression problem. In particular, we attempt to derive an optimal convergence rate and an optimal step size following the approach of \citet{Lacotte:2020} for iterative Hessian sketch with OLS using asymptotic results from random matrix theory and free probability. We show that while ridge regression can be considered a simple extension to OLS, extending the analysis approach of \citet{Lacotte:2020} to partial Newton sketch is not trivial. \todo
+\\
 
-While ridge regression can be considered a simple and small extension to OLS, we show that the analysis approach of \citet{Lacotte:2020} for IHS (\todo: define IHS) does not easily extend to a similar Newton sketch method for ridge regression.
+This report is organized as follows: Section~\ref{sec:background} provides background about sketching and describes the OLS results by \citet{Lacotte:2020} that we aim to extend to ridge regression; Section~\ref{sec:literature} highlights relevant work in the literature; Section~\ref{sec:theory} discusses our attempts to analyze Newton sketch for ridge regression and the key differences from OLS that makes the problem challenging; Section~\ref{sec:empirical} describes \todo; and Section~\ref{sec:conclusion} summarizes our findings and concludes this report.
 
-\subsection{Background}
+\subsection{Background} \label{sec:background}
 
 \subsubsection{Sketching and Newton sketch}
 
 \subsubsection{Optimal convergence of iterative Hessian sketch}
 
-\subsubsection{Related work}
+\subsubsection{Notation}
 
-\subsection{Notation}
+\subsection{Related work} \label{sec:literature}
 
-\subsection{Newton sketch for ridge regression}
+\subsection{Newton sketch for ridge regression} \label{sec:theory}
 
 \todo
 Gradient:
@@ -128,3 +129,8 @@ and the normalized limiting trace is given by
 \lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_i^2\right]\right) &= 1 - \frac{2\alpha_i}{d}\lim_{n\rightarrow\infty}\mathrm{trace}\left(\E\left[\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-1}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right)\right) \\
 &\quad + \frac{\alpha_i^2}{d}\lim_{n\rightarrow\infty}\mathrm{trace}\left(\E\left[\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-2}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right)^2\right)
 \end{align*}
+
+\subsection{Empirical experiments} \label{sec:empirical}
+
+
+\subsection{Conclusion} \label{sec:conclusion}
