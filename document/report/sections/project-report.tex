@@ -103,7 +103,7 @@ Taking the expectation with respect to $\bfS_t$, we get
 \[
 \E\left[\|\Delta_{t+1}\|^2\right] = \Delta_t^\T\E\left[\left(\bfI_d - \alpha_t\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)\right)^2\right]\Delta_t \;.
 \]
-\todo Theorem~4.1 avoids Assumption~2 by exploiting the rotational invariance of $\bfU^\T\bfS_t^\T\bfS_t\bfU$ \todo.
+\todo Theorem~3.1 avoids Assumption~2 by exploiting the rotational invariance of $\bfU^\T\bfS_t^\T\bfS_t\bfU$ \todo.
 
 Take $\bfQ_t=\bfI_d - \alpha_t\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)$. \todo satisfies conditions (limiting spectral distribution as $n\rightarrow\infty$ and others?). Then we have $\Delta_{t+1}=\bfQ_t\Delta_t$ and so
 \begin{align*}
@@ -112,7 +112,7 @@ Take $\bfQ_t=\bfI_d - \alpha_t\left(\bfU^\T\bfS_t^\T\bfS_t\bfU + \lambda\Sigma^{
 &= \mathrm{trace}\left(\E\left[\bfQ_1\ldots \bfQ_{t-1}\bfQ_{t-1}\ldots\bfQ_1\bfQ_0^2\right]\E\left[\Delta_0\Delta_0^\T\right]\right) \\
 &= \frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_1\ldots \bfQ_{t-1}\bfQ_{t-1}\ldots\bfQ_1\bfQ_0^2\right]\right)
 \end{align*}
-using the independence of $\Delta_0$ and $\bfQ_i$ and using Assumption~2. Then taking the limit in $n$ and recursively applying the fact that $\bfQ_0^2$ is asymptotically free from $\bfQ_{t-1}\ldots\bfQ_1$, we get
+using the independence of $\Delta_0$ and $\bfQ_i$ and using Assumption~2. Then taking the limit in $n$ and recursively applying the fact that $\bfQ_0^2$ is asymptotically free from $\bfQ_{t-1}\ldots\bfQ_1$ \todo, we get
 \begin{align*}
 \lim_{n\rightarrow\infty}\E\left[\|\Delta_{t+1}\|^2\right] &= \lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_1\ldots \bfQ_{t-1}\bfQ_{t-1}\ldots\bfQ_1\bfQ_0^2\right]\right) \\
 &= \lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_0^2\right]\right)\lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_2\ldots \bfQ_{t-1}\bfQ_{t-1}\ldots\bfQ_2\bfQ_1^2\right]\right) \\

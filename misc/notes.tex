@@ -316,7 +316,7 @@ using the independence of $\Delta_0$ and $\bfQ_i$. Then
 && &= \lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_0^2\right]\right)\lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_2\ldots \bfQ_{t-1}\bfQ_{t-1}\ldots\bfQ_1^2\right]\right) \\
 &&&= \prod_{i=0}^{t-1}\lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_i^2\right]\right)
 \end{align*}
-using the fact that $\bfQ_0^2$ is asymptotically free from $\bfQ_{t-1}\ldots\bfQ_1$ and recursing. The expectation of $\bfQ_i$ is given by
+using the fact that $\bfQ_0^2$ is asymptotically free from $\bfQ_{t-1}\ldots\bfQ_1$ and recursing (\todo: does asymptotic freeness apply here? Why did it apply in original paper?). The expectation of $\bfQ_i$ is given by
 \begin{align*}
 \E\left[\bfQ_i^2\right] &= \bfI_d - \alpha_i\E\left[\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-1}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right) \\
 &\quad - \alpha_i\left(\bfI_d + \lambda\Sigma^{-2}\right)\E\left[\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-1}\right] \\
@@ -438,6 +438,13 @@ Marchenko-Pastur proof given in \citep{Couillet:2011}
 
 \item
 \href{https://arxiv.org/pdf/1302.5688.pdf}{Asymptotic liberating sequences}
+\begin{itemize}
+\item
+Voiculescu (1991): limiting spectral distribution of $A+UBU^\T$ where $A,B$ Hermitian and $U$ Haar-distributed?
+\end{itemize}
+
+\item
+\href{https://tel.archives-ouvertes.fr/tel-02468213/document}{Eigenvalues and eigenvectors of large matrices under random perturbations}: see Section~3.1 and 3.4; $D+\varepsilon X$ for $D$ Hermitian (diagonal) and $X$ random Hermitian.
 
 \end{itemize}
 
