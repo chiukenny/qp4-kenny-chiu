@@ -1,3 +1,8 @@
+## Feb. 19
+
+* Played with simple examples in R to numerically check if simulations are possible if analytical expressions are not.
+* Cleaned up parts of report.
+
 ## Feb. 15-16
 
 * Start organization of project report.
