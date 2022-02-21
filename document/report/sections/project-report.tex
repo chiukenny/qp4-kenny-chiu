@@ -21,11 +21,30 @@ This report is organized as follows: Section~\ref{sec:background} provides backg
 
 \subsection{Background} \label{sec:background}
 
-This section provides additional background about Newton and iterative Hessian sketch. \todo
+This section provides additional background about Newton sketch and iterative Hessian sketch. \todo
 
-\subsubsection{Sketching and Newton sketch}
+\subsubsection{Newton's method and Newton sketch} \label{sec:newton}
+
+Given a convex, twice-differentiable function $f:\bbR^d\rightarrow\bbR$, Newton's method is an efficient iterative method for finding the minimizing solution. The iterative updates are of the form
+\[
+\bfx_{t+1} = \bfx_t - \left(\nabla^2f(\bfx_t)\right)^{-1}\nabla f(\bfx_t)
+\]
+where $\nabla f(\bfx_t)$ and $\nabla^2f(\bfx_t)$ are the gradient and Hessian of $f$ evaluated at $\bfx_t$, respectively. Depending on the problem, computing the Hessian $\nabla^2f(\bfx_t)$ may be a computational bottleneck. The general Newton sketch algorithm~\citep{Pilanci:2017} avoids computing $\nabla^2f(\bfx_t)$ exactly and instead approximates it by
+\[
+\nabla^2f(\bfx_t) \approx \nabla^2f(\bfx_t)^\frac{1}{2}\bfS_t^\T\bfS_t\nabla^2f(\bfx_t)^\frac{1}{2}
+\]
+where $\bfS_t$ is a random, rectangular sketching matrix introduced for dimension reduction. In this project, we only consider refreshed sketches where $\bfS_0,\ldots,\bfS_t$ are \iid realizations (as opposed to a single, fixed realization). \todo: We also do not focus on the specific type of sketching matrix used as our findings hold generally across sketch types (e.g., \iid Gaussian or orthogonal sketches).
+\\
+
+For functions with an additive decomposition of the form $f=f_0+g$, it may be sufficient to only do a partial Newton sketch~\citep{Pilanci:2017} where the Hessian is approximated by
+\[
+\nabla^2f(\bfx_t) \approx \nabla^2f_0(\bfx_t)^\frac{1}{2}\bfS_t^\T\bfS_t\nabla^2f_0(\bfx_t)^\frac{1}{2} + \nabla^2g(\bfx_t) \;.
+\]
+In particular, the ridge regression loss function has this form and so it is more natural to consider partial Newton sketch updates.
 
 \subsubsection{Random matrix theory and free probability}
+
+\todo
 
 \subsubsection{Notation}
 
@@ -52,20 +71,20 @@ for $\bfb\in\bbR^d$ given data matrix $\bfX\in\bbR^{n\times d}$ with $d\ll n$, r
 \nabla f(\bfb) &= \left(\bfX^\T\bfX+\lambda\bfI_d\right)\bfb - \bfX^\T\bfy \;, \\
 \bfH = \nabla^2f(\bfb) &= \bfX^\T\bfX+\lambda\bfI_d \;.
 \end{align*}
-An iterative solver based on Newton's method for minimizing the loss function computes the updates
+The Newton updates described in Section~\ref{sec:newton} therefore have the form
 \begin{align*}
 \bfb_{t+1} &= \bfb_t - \alpha_t\bfH^{-1}\nabla f(\bfb_t) \\
 &= \bfb_t - \alpha_t\left(\bfX^\T\bfX+\lambda\bfI_d\right)^{-1}\left(\left(\bfX^\T\bfX+\lambda\bfI_d\right)\bfb_t-\bfX^\T\bfy\right) \;.
 \end{align*}
-We consider a partial Newton sketch variant of this update that approximates the Hessian by the sketched version
+A partial Newton sketch of the Hessian has the form
 \[
 \bfH_t = \bfX^\T\bfS_t^\T\bfS_t\bfX + \lambda\bfI_d
 \]
-where $\bfS_t$ is a $m\times n$ sketching matrix, $m\ll n$, that is resampled every iteration. \todo:\citet{Chowdhury:2018} appendix results?. The partial Newton sketch updates for ridge regression are then given by
+where $\bfS_t$ is a $m\times n$ refreshed sketching matrix with $d<m\ll n$. \todo:\citet{Chowdhury:2018} appendix results?. The partial Newton sketch updates for ridge regression are then given by
 \[
 \bfb_{t+1} = \bfb_t - \alpha_t\left(\bfX^\T\bfS_t^\T\bfS_t\bfX + \lambda\bfI_d\right)^{-1}\left(\left(\bfX^\T\bfX+\lambda\bfI_d\right)\bfb_t-\bfX^\T\bfy\right) \;.
 \]
-Note that \citet{Chowdhury:2018} and \citet{Wang:2017}) also considered this sketched update for ridge regression. However, our analysis of this method differs from theirs in that we adopt the asymptotic random matrix theoretic approach from \citet{Lacotte:2020}. Also note that we do not consider updates with momentum as \citet{Lacotte:2020} did as we show that extending their analysis approach from OLS to ridge regression is already non-trivial.
+Note that \citet{Chowdhury:2018} and \citet{Wang:2017}) also considered this sketched update for ridge regression. However, our analysis approach differs from theirs in that we adopt the asymptotic random matrix theoretic approach from \citet{Lacotte:2020}. Also note that we do not consider updates with momentum as \citet{Lacotte:2020} did as we will show that extending their analysis approach from OLS to ridge regression is already non-trivial.
 
 
 
@@ -81,7 +100,7 @@ Consider the partial Newton update for ridge regression described in Section~\re
 \[
 \rho = \left(\lim_{n\rightarrow\infty}\frac{\E\left[\|\Delta_t\|_2^2\right]}{\|\Delta_0\|_2^2}\right)^\frac{1}{t}
 \]
-where $\rho$ is the rate of convergence with some closed-form expression.
+where $\rho$ is the optimal rate of convergence with some closed-form expression.
 \end{conjecture}
 
 We begin our attempt to prove Conjecture~\ref{con:ridge} following the proofs by \citet{Lacotte:2020}. Using the fact that the ridge regression solution satisfies the equation
@@ -100,7 +119,7 @@ Let $\bfX = \bfU\Sigma\bfV^\T$ be the thin singular value decomposition of $\bfX
 \left(\bfX^\T\bfS_t^\T\bfS_t\bfX + \lambda\bfI_d\right)^{-1} &= \left(\bfV\Sigma\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma\bfV^\T + \lambda\bfV\bfV^\T\right)^{-1} \\
 &= \bfV\left(\Sigma\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\bfV^\T \;.
 \end{align*}
-However, in order to later on obtain an expression in terms of $\Delta_t$ as in the original proof, we require that the data matrix be full column rank. This is a less than ideal assumption to make as one of the advantages of ridge regression is being able to obtain an unique solution with non-full rank data matrices. We return to this point in a later discussion how we may avoid this assumption. \todo
+However, in order to later on obtain an expression in terms of $\Delta_t$ as in the original proof, we require that the data matrix be full column rank. This is a less than ideal assumption to make as one of the advantages of ridge regression is being able to obtain an unique solution with non-full rank data matrices. We return to this point in Section~\ref{sec:fullrank} to discuss how this assumption may be avoided.
 
 \begin{assumption} \label{asp:rank}
 The data matrix $\bfX$ has full column rank.
@@ -150,7 +169,7 @@ where
 The proof of Theorem~3.1 proceeds to recognize that the matrix $\bfS_t\bfU$ can be embedded into a Haar matrix and is therefore rotationally invariant. Using exchangeability arguments, the expectations $\E\left[\left(\bfU^\T\bfS_t^\T\bfS_t\bfU\right)^{-p}\right]$ have a simple closed-form expression in terms of the inverse moments from which the rest of the proof follows. We do not have rotational invariance in our ridge regression case, and so we follow the proof of Theorem~4.1 from this point onwards. We require an additional assumption on the initialization of the problem.
 
 \begin{assumption} \label{asp:initialization}
-The initial error vector $\Delta_0$ is random and satisfies $\E\left[\Delta_0\Delta_0^\T\right]=\frac{\bfI_d}{d}$.\footnote{The convergence rate $\rho$ in the statement of Conjecture~\ref{con:ridge} is also redefined as $\left(\lim_{n\rightarrow\infty}\frac{\E\left[\|\Delta_t\|_2^2\right]}{\E\left[\|\Delta_0\|_2^2\right]}\right)^\frac{1}{t}$.}
+The initial error vector $\Delta_0$ is random, independent of $\bfS_0,\ldots,\bfS_t$, and satisfies $\E\left[\Delta_0\Delta_0^\T\right]=\frac{\bfI_d}{d}$.\footnote{The convergence rate $\rho$ in the statement of Conjecture~\ref{con:ridge} is also redefined as $\left(\lim_{n\rightarrow\infty}\frac{\E\left[\|\Delta_t\|_2^2\right]}{\E\left[\|\Delta_0\|_2^2\right]}\right)^\frac{1}{t}$ where $\E\left[\|\Delta_0\|_2^2\right]=\E\left[\Delta_0^\T\Delta_0\right]=\mathrm{trace}\left(\E\left[\Delta_0\Delta_0^\T\right]\right)=1$.}
 \end{assumption}
 
 Under Assumption~\ref{asp:initialization}, taking the expectation with respect to $\bfS_t$ instead gives
@@ -158,38 +177,35 @@ Under Assumption~\ref{asp:initialization}, taking the expectation with respect t
 \E\left[\|\Delta_{t+1}\|^2\right] &= \E\left[\Delta_t^\T\bfQ_t^\T\bfQ_t\Delta_t\right] \\
 &= \E\left[\Delta_0^\T\bfQ_0^\T\ldots \bfQ_t^\T\bfQ_t\ldots\bfQ_0\Delta_0\right] \\
 &= \E\left[\mathrm{trace}\left(\Delta_0^\T\bfQ_0^\T\ldots \bfQ_t^\T\bfQ_t\ldots\bfQ_0\Delta_0\right)\right] \\
-&= \mathrm{trace}\left(\E\left[\bfQ_0^\T\ldots \bfQ_t^\T\bfQ_t\ldots\bfQ_0\Delta_0\Delta_0^\T\right]\right)
+&= \mathrm{trace}\left(\E\left[\bfQ_0^\T\ldots \bfQ_t^\T\bfQ_t\ldots\bfQ_0\Delta_0\Delta_0^\T\right]\right) \;.
 \end{align*}
-\todo: are $\bfQ$ and rank one matrix $\Delta_0\Delta_0^\T$ free?
+By the independence of $\Delta_0$ and $\bfQ_i$, we then have
+\begin{align*}
+\E\left[\|\Delta_{t+1}\|^2\right] &= \mathrm{trace}\left(\E\left[\bfQ_0^\T\ldots \bfQ_t^\T\bfQ_t\ldots\bfQ_0\right]\E\left[\Delta_0\Delta_0^\T\right]\right) \\
+&= \frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_0^\T\ldots \bfQ_t^\T\bfQ_t\ldots\bfQ_0\right]\right) \;.
+\end{align*}
+At this point in the proof of Theorem~4.1 for OLS, \citet{Lacotte:2020} use the asymptotic freeness of $\bfQ_i=\bfI_d-\alpha_i\bfU^\T\bfS_i^\T\bfS_i\bfU$ and $\bfQ_j$ for $i\neq j$ to obtain a closed-form expression for the trace. However, asymptotic freeness for $\bfQ_i=\bfI_d - \alpha_i\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)$ in our ridge regression case is no longer obvious as we have lost the convenience of working with (partial) Haar matrices. Due to time constraints on this project, we move forward under the hypothetical assumption that asymptotic freeness is retained in the ridge regression case. \textit{If $\bfQ_i$ were asymptotically free from $\bfQ_j$ for $i\neq j$}, then from recursive application we obtain
+\begin{align*}
+\lim_{n\rightarrow\infty}\E\left[\|\Delta_{t+1}\|^2\right] &= \lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_1^\T\ldots \bfQ_t^\T\bfQ_t\ldots\bfQ_0\bfQ_0^\T\right]\right) \\
+&= \lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_2^\T\ldots \bfQ_t^\T\bfQ_t\ldots\bfQ_2\bfQ_1\bfQ_1^\T\right]\right)\lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_0\bfQ_0^\T\right]\right) \\
+&= \prod_{i=0}^t\lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_i\bfQ_i^\T\right]\right) \\
+&= \prod_{i=0}^t\lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_i^\T\bfQ_i\right]\right) \;.
+\end{align*}
+Using the expression for $\E\left[\bfQ_i^\T\bfQ_i\right]$ given earlier, we have
+\begin{align*}
+\lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_i^\T\bfQ_i\right]\right) &= 1 - \lim_{n\rightarrow\infty}\frac{2\alpha_i}{d}\mathrm{trace}\left(\E\left[\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-1}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right)\right) \\
+&\quad + \lim_{n\rightarrow\infty}\frac{\alpha_i^2}{d}\mathrm{trace}\left(\E\left[\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-2}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right)^2\right) \;.
+\end{align*}
+Our final obstacle then comes from giving a closed-form expression for the limiting spectral distributions of the above matrices. Assuming that the singular values of $\bfX$ are bounded as $n\rightarrow\infty$, it should be clear that a limiting spectral distribution exists in cases when it exists for $\bfU^\T\bfS_i^\T\bfS_i\bfU$. If constant closed-form expressions of the limiting traces could be derived, then the next step would be to minimize $\lim_{n\rightarrow\infty}\E\left[\|\Delta_{t+1}\|^2\right] = \rho(\alpha)^{t+1}$ as a function of constant step size $\alpha$. Note that $\rho(\alpha)$ is quadratic and convex in $\alpha$. Furthermore, because $\bfQ_i^\T\bfQ_i$ is positive semidefinite, its trace is non-negative and therefore $\rho(\alpha)\geq0$. Thus, minimizing the limiting error norm is equivalent to minimizing $\rho(\alpha)$. Due to time constraints on this project, we leave this idea for future work but provide a brief discussion in Section~\ref{sec:invmoment} as to why calculating the inverse moments is more challenging compared to the OLS case.
 
-\todo satisfies conditions (limiting spectral distribution as $n\rightarrow\infty$ and others?). Then we have $\Delta_{t+1}=\bfQ_t\Delta_t$ and so
-\begin{align*}
-\E\left[\|\Delta_{t+1}\|^2\right] &= \mathrm{trace}\left(\E\left[\Delta_0^\T\bfQ_0\ldots \bfQ_{t-1}\bfQ_{t-1}\ldots\bfQ_0\Delta_0\right]\right) \\
-&= \mathrm{trace}\left(\E\left[\bfQ_0\ldots \bfQ_{t-1}\bfQ_{t-1}\ldots\bfQ_0\Delta_0\Delta_0^\T\right]\right) \\
-&= \mathrm{trace}\left(\E\left[\bfQ_1\ldots \bfQ_{t-1}\bfQ_{t-1}\ldots\bfQ_1\bfQ_0^2\right]\E\left[\Delta_0\Delta_0^\T\right]\right) \\
-&= \frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_1\ldots \bfQ_{t-1}\bfQ_{t-1}\ldots\bfQ_1\bfQ_0^2\right]\right)
-\end{align*}
-using the independence of $\Delta_0$ and $\bfQ_i$ and using Assumption~2. Then taking the limit in $n$ and recursively applying the fact that $\bfQ_0^2$ is asymptotically free from $\bfQ_{t-1}\ldots\bfQ_1$ \todo, we get
-\begin{align*}
-\lim_{n\rightarrow\infty}\E\left[\|\Delta_{t+1}\|^2\right] &= \lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_1\ldots \bfQ_{t-1}\bfQ_{t-1}\ldots\bfQ_1\bfQ_0^2\right]\right) \\
-&= \lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_0^2\right]\right)\lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_2\ldots \bfQ_{t-1}\bfQ_{t-1}\ldots\bfQ_2\bfQ_1^2\right]\right) \\
-&= \prod_{i=0}^{t-1}\lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_i^2\right]\right)
-\end{align*}
-\todo The expectation of $\bfQ_i$ is given by
-\begin{align*}
-\E\left[\bfQ_i^2\right] &= \bfI_d - \alpha_i\E\left[\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-1}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right) \\
-&\quad - \alpha_i\left(\bfI_d + \lambda\Sigma^{-2}\right)\E\left[\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-1}\right] \\
-&\quad + \alpha_i^2\left(\bfI_d + \lambda\Sigma^{-2}\right)\E\left[\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-2}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right)
-\end{align*}
-and the normalized limiting trace is given by
-\begin{align*}
-\lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_i^2\right]\right) &= 1 - \frac{2\alpha_i}{d}\lim_{n\rightarrow\infty}\mathrm{trace}\left(\E\left[\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-1}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right)\right) \\
-&\quad + \frac{\alpha_i^2}{d}\lim_{n\rightarrow\infty}\mathrm{trace}\left(\E\left[\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-2}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right)^2\right)
-\end{align*}
+\subsubsection{Full column rank assumption} \label{sec:fullrank}
 
-\subsubsection{Full column rank assumption}
+\subsubsection{Inverse moments} \label{sec:invmoment}
+
 
 \subsection{Empirical experiments} \label{sec:empirical}
 
 
-\subsection{Conclusion} \label{sec:conclusion}
+\subsection{Discussion} \label{sec:conclusion}
+
+\todo reliance on refreshed

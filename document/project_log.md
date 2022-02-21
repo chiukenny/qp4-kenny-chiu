@@ -1,3 +1,7 @@
+## Feb. 20
+
+* Continued writing theory section of report and filled in parts of background.
+
 ## Feb. 19
 
 * Played with simple examples in R to numerically check if simulations are possible if analytical expressions are not.
