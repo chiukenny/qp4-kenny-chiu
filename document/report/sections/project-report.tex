@@ -21,7 +21,7 @@ This report is organized as follows: Section~\ref{sec:background} provides backg
 
 \subsection{Background} \label{sec:background}
 
-This section provides additional background about Newton sketch and iterative Hessian sketch. \todo
+This section briefly describes the Newton sketch algorithm and the probability subfields of random matrix theory and free probability that are referred to in this report.
 
 \subsubsection{Newton's method and Newton sketch} \label{sec:newton}
 
@@ -29,36 +29,49 @@ Given a convex, twice-differentiable function $f:\bbR^d\rightarrow\bbR$, Newton'
 \[
 \bfx_{t+1} = \bfx_t - \left(\nabla^2f(\bfx_t)\right)^{-1}\nabla f(\bfx_t)
 \]
-where $\nabla f(\bfx_t)$ and $\nabla^2f(\bfx_t)$ are the gradient and Hessian of $f$ evaluated at $\bfx_t$, respectively. Depending on the problem, computing the Hessian $\nabla^2f(\bfx_t)$ may be a computational bottleneck. The general Newton sketch algorithm~\citep{Pilanci:2017} avoids computing $\nabla^2f(\bfx_t)$ exactly and instead approximates it by
+where $\nabla f(\bfx_t)$ and $\nabla^2f(\bfx_t)$ are the gradient and Hessian of $f$ evaluated at $\bfx_t$, respectively. Depending on the problem, computing the Hessian $\nabla^2f(\bfx_t)$ may be a computational bottleneck. The general Newton sketch algorithm~\citep{Pilanci:2017} avoids computing $\nabla^2f(\bfx_t)$ exactly and instead approximates it with
 \[
 \nabla^2f(\bfx_t) \approx \nabla^2f(\bfx_t)^\frac{1}{2}\bfS_t^\T\bfS_t\nabla^2f(\bfx_t)^\frac{1}{2}
 \]
 where $\bfS_t$ is a random, rectangular sketching matrix introduced for dimension reduction. In this project, we only consider refreshed sketches where $\bfS_0,\ldots,\bfS_t$ are \iid realizations (as opposed to a single, fixed realization). \todo: We also do not focus on the specific type of sketching matrix used as our findings hold generally across sketch types (e.g., \iid Gaussian or orthogonal sketches).
 \\
 
-For functions with an additive decomposition of the form $f=f_0+g$, it may be sufficient to only do a partial Newton sketch~\citep{Pilanci:2017} where the Hessian is approximated by
+For functions with an additive decomposition of the form $f=f_0+g$, it may be sufficient for computational improvements to only do a partial Newton sketch~\citep{Pilanci:2017} where the Hessian is approximated by
 \[
 \nabla^2f(\bfx_t) \approx \nabla^2f_0(\bfx_t)^\frac{1}{2}\bfS_t^\T\bfS_t\nabla^2f_0(\bfx_t)^\frac{1}{2} + \nabla^2g(\bfx_t) \;.
 \]
-In particular, the ridge regression loss function has this form and so it is more natural to consider partial Newton sketch updates.
+In particular, the ridge regression loss function has this form where it is analytically more convenient to consider partial Newton sketch updates.
 
 \subsubsection{Random matrix theory and free probability}
 
-\todo
+Free probability theory was initially developed by Voiculescu in the 1980's ~\citep{Anderson:2009} and is concerned with the study of non-commutative random variables. More recently, its connections to random matrix theory were established as a means of studying the limiting spectral distribution of random matrices. In free probability, the notion of freeness is analogous to independence in classical probability theory. A family of random $n\times n$ matrices $\{\bfX_n^{(1)},\ldots,\bfX_n^{(I)}\}$ is said to be asymptotically free~\citep{Couillet:2011_free} if
+\begin{enumerate}
+\item
+$\bfX_n^{(i)}$ has a limiting spectral distribution for all $i\in\{1,\ldots,I\}$, and
+\item
+for all $\{i_1,\ldots,i_J\}$ with $i_j\in\{1,\ldots,I\}$, $j\in\{1,\ldots,J\}$ and $i_1\neq i_2,\ldots,i_{J-1}\neq i_J$, and for all polynomials $P_1,\ldots,P_J$ such that
+\[
+\lim_{n\rightarrow\infty} \frac{1}{n}\E\left[\mathrm{trace}\left(P_j\left(\bfX_n^{(i_j)}\right)\right)\right] = 0
+\]
+for all $j\in\{1,\ldots,J\}$, we have
+\[
+\lim_{n\rightarrow\infty} \frac{1}{n}\E\left[\mathrm{trace}\left(\prod_{j=1}^JP_j\left(\bfX_n^{(i_j)}\right)\right)\right] = 0 \;.
+\]
+\end{enumerate}
+The analysis approach of \citet{Lacotte:2020} uses freeness to calculate the expected normalized trace of matrix products as for asymptotically free random matrices $\bfX_i$ and $\bfX_j$, it holds that as $n\rightarrow\infty$,
+\[
+\frac{1}{n}\E\left[\mathrm{trace}(\bfX_i\bfX_j)\right] - \frac{1}{n}\E\left[\mathrm{trace}(\bfX_i)\right]\frac{1}{n}\E\left[\mathrm{trace}(\bfX_j)\right] \rightarrow 0 \;.
+\]
+Other tools from random matrix theory such as transforms of spectral distributions are also used in their analysis, but we do not reach the stage in the analysis where they are useful in this report and so we do not cover them here. \todo
 
-\subsubsection{Notation}
-
-Define $\Delta_t=\bfU^\T\bfX\left(\bfb_t-\bfb^*\right)$.
 
 \subsection{Related work} \label{sec:literature}
 
-\citet{Chowdhury:2018}
+Sketched algorithms for ridge regression have been previously considered in the literature. \citet{Chowdhury:2018} examined ridge regression in the setting where $n\ll d$ and showed that under certain conditions on the sketched approximation, the relative error in the solution of the partial Newton sketch algorithm is bounded above by an exponentially decaying tolerance. \citet{Wang:2017} compared the classical sketching algorithm (i.e., sketching both the data matrix and the response vector) to the partial Newton sketch algorithm in matrix ridge regression for the case $d\ll n$ and found that both have increased risks relative to the optimal solution. They proposed model averaging as a solution for improving the theoretical properties. It is notable that the analyses by \citet{Chowdhury:2018} and \citet{Wang:2017} are both based on conventional statistical learning techniques and that the specific sketching matrix used is not a focus of the analysis.
+\\
 
-\citet{Wang:2017}
+In this project, we attempt to analyze the partial Newton sketch for ridge regression following the approach that \citet{Lacotte:2020} used for iterative Hessian sketch (IHS) with OLS. Their approach relies on asymptotic results from random matrix theory and free probability, and this appeared to allow a finer-grain analysis of IHS where the derived convergence rate depends on the specific sketching matrix used. The random matrix theoretic approach to analysis does not seem to have been considered much outside of OLS problems~\citep{Dobriban:2019,Lacotte:2020b}. As we explore in this project, a possible reason for this may be that even simple extensions to standard OLS make it difficult to directly apply existing results from these subfields of probability.
 
-\citet{Cohen:2017}
-
-\citet{Lacotte:2020}
 
 \subsection{Newton sketch for ridge regression} \label{sec:ridgesketch}
 
@@ -87,7 +100,6 @@ where $\bfS_t$ is a $m\times n$ refreshed sketching matrix with $d<m\ll n$. \tod
 Note that \citet{Chowdhury:2018} and \citet{Wang:2017}) also considered this sketched update for ridge regression. However, our analysis approach differs from theirs in that we adopt the asymptotic random matrix theoretic approach from \citet{Lacotte:2020}. Also note that we do not consider updates with momentum as \citet{Lacotte:2020} did as we will show that extending their analysis approach from OLS to ridge regression is already non-trivial.
 
 
-
 \subsection{Analysis attempt based on random matrix theory} \label{sec:theory}
 
 In this section, we show that the proof technique used to obtain Theorems~3.1 and 4.1 of \citep{Lacotte:2020} do not easily generalize to the partial Newton sketch updates for ridge regression. We follow the general procedure of the proofs and show how far we can get with the ridge regression setup. We also highlight the key differences between OLS and ridge regression that leads to problems in the proof and discuss possible solutions for rectifying these problems in future work.
@@ -96,7 +108,7 @@ In this section, we show that the proof technique used to obtain Theorems~3.1 an
 The following conjecture formalizes the result analogous to Theorems~3.1 and 4.1 that we would like to prove. Note that additional assumptions will be added to the conjecture as we progress through the proof.
 
 \begin{conjecture} \label{con:ridge}
-Consider the partial Newton update for ridge regression described in Section~\ref{sec:ridgesketch}. For some optimal step size $\alpha_t$, the sequence of error vectors $\{\Delta_t\}$ satisfies
+Consider the partial Newton update for ridge regression described in Section~\ref{sec:ridgesketch}. Let $\bfX = \bfU\Sigma\bfV^\T$ be the thin singular value decomposition of $\bfX$ where $\bfU$ is a $n\times d$ semi-orthogonal matrix, $\bfV$ is a $d\times d$ orthogonal matrix, and $\Sigma$ is a $d\times d$ diagonal matrix with the singular values of $\bfX$ on the diagonal. Define the error vector $\Delta_t=\bfU^\T\bfX\left(\bfb_t-\bfb^*\right)$. For some optimal step size $\alpha_t$, the sequence of error vectors $\{\Delta_t\}$ satisfies
 \[
 \rho = \left(\lim_{n\rightarrow\infty}\frac{\E\left[\|\Delta_t\|_2^2\right]}{\|\Delta_0\|_2^2}\right)^\frac{1}{t}
 \]
@@ -112,7 +124,7 @@ the update can be rewritten as
 \bfb_{t+1} &= \bfb_t - \alpha_t\left(\bfX^\T\bfS_t^\T\bfS_t\bfX + \lambda\bfI_d\right)^{-1}\left(\left(\bfX^\T\bfX+\lambda\bfI_d\right)\bfb_t-\left(\bfX^\T\bfX+\lambda\bfI_d\right)\bfb^*\right) \\
 &= \bfb_t - \alpha_t\left(\bfX^\T\bfS_t^\T\bfS_t\bfX + \lambda\bfI_d\right)^{-1}\left(\bfX^\T\bfX+\lambda\bfI_d\right)\left(\bfb_t-\bfb^*\right) \;.
 \end{align*}
-Let $\bfX = \bfU\Sigma\bfV^\T$ be the thin singular value decomposition of $\bfX$ where $\bfU$ is a $n\times d$ semi-orthogonal matrix, $\bfV$ is a $d\times d$ orthogonal matrix, and $\Sigma$ is a $d\times d$ diagonal matrix with the singular values of $\bfX$ on the diagonal. Then we can write
+Using the thin SVD of $\bfX$, we have the matrix identities
 \begin{align*}
 \bfX^\T\bfX+\lambda\bfI_d &= \bfV\Sigma^2\bfV^\T + \lambda \bfV\bfV^\T \\
 &= \bfV\left(\Sigma^2+ \lambda\bfI_d\right)\bfV^\T \;, \\
@@ -209,3 +221,4 @@ Our final obstacle then comes from giving a closed-form expression for the limit
 \subsection{Discussion} \label{sec:conclusion}
 
 \todo reliance on refreshed
+
