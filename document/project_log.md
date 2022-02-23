@@ -1,3 +1,7 @@
+## Feb. 21-22
+
+* Added background and conclusion to report.
+
 ## Feb. 20
 
 * Continued writing theory section of report and filled in parts of background.

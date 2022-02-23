@@ -4,6 +4,12 @@
 
 \section{Project report}
 
+
+\begin{abstract}
+\todo
+\end{abstract}
+
+
 \subsection{Introduction}
 
 Ridge regression is a special case of regularized least squares where the penalty function is chosen to be the $\ell_2$-norm of the model parameters. Given data matrix $\bfX\in\bbR^{n\times d}$, observations $\bfy\in\bbR^n$ and a regularization parameter $\lambda>0$, ridge regression obtains estimates of the parameters as the solution to the optimization problem
@@ -33,7 +39,7 @@ where $\nabla f(\bfx_t)$ and $\nabla^2f(\bfx_t)$ are the gradient and Hessian of
 \[
 \nabla^2f(\bfx_t) \approx \nabla^2f(\bfx_t)^\frac{1}{2}\bfS_t^\T\bfS_t\nabla^2f(\bfx_t)^\frac{1}{2}
 \]
-where $\bfS_t$ is a random, rectangular sketching matrix introduced for dimension reduction. In this project, we only consider refreshed sketches where $\bfS_0,\ldots,\bfS_t$ are \iid realizations (as opposed to a single, fixed realization). \todo: We also do not focus on the specific type of sketching matrix used as our findings hold generally across sketch types (e.g., \iid Gaussian or orthogonal sketches).
+where $\bfS_t$ is a random, rectangular sketching matrix introduced for dimension reduction. In this project, we only consider refreshed sketches where $\bfS_0,\ldots,\bfS_t$ are \iid realizations (as opposed to a single, fixed realization) to support an analysis based on free probability. We also do not focus on the specific type of sketching matrix used as the challenges we encounter hold generally across sketch types (e.g., \iid Gaussian or orthogonal sketches).
 \\
 
 For functions with an additive decomposition of the form $f=f_0+g$, it may be sufficient for computational improvements to only do a partial Newton sketch~\citep{Pilanci:2017} where the Hessian is approximated by
@@ -62,7 +68,7 @@ The analysis approach of \citet{Lacotte:2020} uses freeness to calculate the exp
 \[
 \frac{1}{n}\E\left[\mathrm{trace}(\bfX_i\bfX_j)\right] - \frac{1}{n}\E\left[\mathrm{trace}(\bfX_i)\right]\frac{1}{n}\E\left[\mathrm{trace}(\bfX_j)\right] \rightarrow 0 \;.
 \]
-Other tools from random matrix theory such as transforms of spectral distributions are also used in their analysis, but we do not reach the stage in the analysis where they are useful in this report and so we do not cover them here. \todo
+Other tools from random matrix theory such as transforms of spectral distributions are also used in their analysis, but we do not reach the stage in the analysis where they are useful in this report and so we do not cover them here.
 
 
 \subsection{Related work} \label{sec:literature}
@@ -93,7 +99,7 @@ A partial Newton sketch of the Hessian has the form
 \[
 \bfH_t = \bfX^\T\bfS_t^\T\bfS_t\bfX + \lambda\bfI_d
 \]
-where $\bfS_t$ is a $m\times n$ refreshed sketching matrix with $d<m\ll n$. \todo:\citet{Chowdhury:2018} appendix results?. The partial Newton sketch updates for ridge regression are then given by
+where $\bfS_t$ is a $m\times n$ refreshed sketching matrix with $d<m\ll n$. The partial Newton sketch updates for ridge regression are then given by
 \[
 \bfb_{t+1} = \bfb_t - \alpha_t\left(\bfX^\T\bfS_t^\T\bfS_t\bfX + \lambda\bfI_d\right)^{-1}\left(\left(\bfX^\T\bfX+\lambda\bfI_d\right)\bfb_t-\bfX^\T\bfy\right) \;.
 \]
@@ -178,13 +184,13 @@ where
 \[
 \E\left[\bfR_t^2\right] = \bfI_d - 2\alpha_t\E\left[\left(\bfU^\T\bfS_t^\T\bfS_t\bfU\right)^{-1}\right] + \alpha_t^2\E\left[\left(\bfU^\T\bfS_t^\T\bfS_t\bfU\right)^{-2}\right] \;.
 \]
-The proof of Theorem~3.1 proceeds to recognize that the matrix $\bfS_t\bfU$ can be embedded into a Haar matrix and is therefore rotationally invariant. Using exchangeability arguments, the expectations $\E\left[\left(\bfU^\T\bfS_t^\T\bfS_t\bfU\right)^{-p}\right]$ have a simple closed-form expression in terms of the inverse moments from which the rest of the proof follows. We do not have rotational invariance in our ridge regression case, and so we follow the proof of Theorem~4.1 from this point onwards. We require an additional assumption on the initialization of the problem.
+The proof of Theorem~3.1 proceeds to recognize that the matrix $\bfS_t\bfU$ can be embedded into a Haar matrix and is therefore rotationally invariant. Using exchangeability arguments, the matrix $\E\left[\left(\bfU^\T\bfS_t^\T\bfS_t\bfU\right)^{-p}\right]$ has a simple closed-form expression in terms of the inverse moments from which the rest of the proof follows. We do not have rotational invariance in our ridge regression case, and so we follow the proof of Theorem~4.1 from this point onwards. Theorem~4.1 requires an additional assumption on the initialization of the problem in order to avoid computing the expectations directly.
 
 \begin{assumption} \label{asp:initialization}
 The initial error vector $\Delta_0$ is random, independent of $\bfS_0,\ldots,\bfS_t$, and satisfies $\E\left[\Delta_0\Delta_0^\T\right]=\frac{\bfI_d}{d}$.\footnote{The convergence rate $\rho$ in the statement of Conjecture~\ref{con:ridge} is also redefined as $\left(\lim_{n\rightarrow\infty}\frac{\E\left[\|\Delta_t\|_2^2\right]}{\E\left[\|\Delta_0\|_2^2\right]}\right)^\frac{1}{t}$ where $\E\left[\|\Delta_0\|_2^2\right]=\E\left[\Delta_0^\T\Delta_0\right]=\mathrm{trace}\left(\E\left[\Delta_0\Delta_0^\T\right]\right)=1$.}
 \end{assumption}
 
-Under Assumption~\ref{asp:initialization}, taking the expectation with respect to $\bfS_t$ instead gives
+Under Assumption~\ref{asp:initialization}, taking the expectation with respect to $\bfS_t$ gives
 \begin{align*}
 \E\left[\|\Delta_{t+1}\|^2\right] &= \E\left[\Delta_t^\T\bfQ_t^\T\bfQ_t\Delta_t\right] \\
 &= \E\left[\Delta_0^\T\bfQ_0^\T\ldots \bfQ_t^\T\bfQ_t\ldots\bfQ_0\Delta_0\right] \\
@@ -194,12 +200,17 @@ Under Assumption~\ref{asp:initialization}, taking the expectation with respect t
 By the independence of $\Delta_0$ and $\bfQ_i$, we then have
 \begin{align*}
 \E\left[\|\Delta_{t+1}\|^2\right] &= \mathrm{trace}\left(\E\left[\bfQ_0^\T\ldots \bfQ_t^\T\bfQ_t\ldots\bfQ_0\right]\E\left[\Delta_0\Delta_0^\T\right]\right) \\
-&= \frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_0^\T\ldots \bfQ_t^\T\bfQ_t\ldots\bfQ_0\right]\right) \;.
+&= \frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_1^\T\ldots \bfQ_t^\T\bfQ_t\ldots\bfQ_0\bfQ_0^\T\right]\right) \;.
 \end{align*}
-At this point in the proof of Theorem~4.1 for OLS, \citet{Lacotte:2020} use the asymptotic freeness of $\bfQ_i=\bfI_d-\alpha_i\bfU^\T\bfS_i^\T\bfS_i\bfU$ and $\bfQ_j$ for $i\neq j$ to obtain a closed-form expression for the trace. However, asymptotic freeness for $\bfQ_i=\bfI_d - \alpha_i\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)$ in our ridge regression case is no longer obvious as we have lost the convenience of working with (partial) Haar matrices. Due to time constraints on this project, we move forward under the hypothetical assumption that asymptotic freeness is retained in the ridge regression case. \textit{If $\bfQ_i$ were asymptotically free from $\bfQ_j$ for $i\neq j$}, then from recursive application we obtain
+At this point in the proof of Theorem~4.1 for OLS, \citet{Lacotte:2020} use the asymptotic freeness of $\bfR_0\bfR_0^\T=\bfR_0^2=\left(\bfI_d-\alpha_0\bfU^\T\bfS_0^\T\bfS_0\bfU\right)^2$ and $\bfR_t\ldots\bfR_1$ to obtain a closed-form expression for the trace. Asymptotic freeness of these matrices seem to follow from Corollary~4.1 of \citep{Couillet:2011_free}, which says that for $d\times d$ Hermitian random matrices $\{\bfT_1,\ldots,\bfT_t\}$ with convergent limiting spectral distributions and Haar matrices $\{\bfW_1,\ldots,\bfW_t\}$ independent of $\bfT_i$, the random matrices $\bfW_1\bfT_1\bfW_1^\T,\ldots,\bfW_t\bfT_t\bfW_t^\T$ are asymptotically free as $n\rightarrow\infty$. Because $\bfR_0^2$ and $\bfR_i$ for $i\neq 0$ are independent and Hermitian, they each have a decomposition of the form $\bfW\bfT\bfW^\T$ where $\bfW$ is a Haar matrix and $\bfT$ is diagonal and so the result applies. However, it is less obvious that this result applies in the ridge regression case for
 \begin{align*}
-\lim_{n\rightarrow\infty}\E\left[\|\Delta_{t+1}\|^2\right] &= \lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_1^\T\ldots \bfQ_t^\T\bfQ_t\ldots\bfQ_0\bfQ_0^\T\right]\right) \\
-&= \lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_2^\T\ldots \bfQ_t^\T\bfQ_t\ldots\bfQ_2\bfQ_1\bfQ_1^\T\right]\right)\lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_0\bfQ_0^\T\right]\right) \\
+\bfQ_0\bfQ_0^\T &= \bfI_d - \alpha_0\left(\bfU^\T\bfS_0^\T\bfS_0\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right) \\
+&\quad -  \alpha_0\left(\bfI_d + \lambda\Sigma^{-2}\right)\left(\bfU^\T\bfS_0^\T\bfS_0\bfU + \lambda\Sigma^{-2}\right)^{-1} \\
+&\quad + \alpha_0^2\left(\bfU^\T\bfS_0^\T\bfS_0\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)^2\left(\bfU^\T\bfS_0^\T\bfS_0\bfU + \lambda\Sigma^{-2}\right)^{-1}
+\end{align*}
+and $\bfQ_t\ldots\bfQ_1$ as individual $\bfQ_i$ and $\bfQ_i^\T$ are not Hermitian. Due to time constraints on this project, we move forward under the hypothetical assumption that asymptotic freeness is retained in the ridge regression case. \textit{If $\bfQ_0\bfQ_0^\T$ were asymptotically free from $\bfQ_t\ldots\bfQ_1$}, then from recursive application we obtain
+\begin{align*}
+\lim_{n\rightarrow\infty}\E\left[\|\Delta_{t+1}\|^2\right] &= \lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_2^\T\ldots \bfQ_t^\T\bfQ_t\ldots\bfQ_2\bfQ_1\bfQ_1^\T\right]\right)\lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_0\bfQ_0^\T\right]\right) \\
 &= \prod_{i=0}^t\lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_i\bfQ_i^\T\right]\right) \\
 &= \prod_{i=0}^t\lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_i^\T\bfQ_i\right]\right) \;.
 \end{align*}
@@ -208,11 +219,44 @@ Using the expression for $\E\left[\bfQ_i^\T\bfQ_i\right]$ given earlier, we have
 \lim_{n\rightarrow\infty}\frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_i^\T\bfQ_i\right]\right) &= 1 - \lim_{n\rightarrow\infty}\frac{2\alpha_i}{d}\mathrm{trace}\left(\E\left[\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-1}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right)\right) \\
 &\quad + \lim_{n\rightarrow\infty}\frac{\alpha_i^2}{d}\mathrm{trace}\left(\E\left[\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-2}\right]\left(\bfI_d + \lambda\Sigma^{-2}\right)^2\right) \;.
 \end{align*}
-Our final obstacle then comes from giving a closed-form expression for the limiting spectral distributions of the above matrices. Assuming that the singular values of $\bfX$ are bounded as $n\rightarrow\infty$, it should be clear that a limiting spectral distribution exists in cases when it exists for $\bfU^\T\bfS_i^\T\bfS_i\bfU$. If constant closed-form expressions of the limiting traces could be derived, then the next step would be to minimize $\lim_{n\rightarrow\infty}\E\left[\|\Delta_{t+1}\|^2\right] = \rho(\alpha)^{t+1}$ as a function of constant step size $\alpha$. Note that $\rho(\alpha)$ is quadratic and convex in $\alpha$. Furthermore, because $\bfQ_i^\T\bfQ_i$ is positive semidefinite, its trace is non-negative and therefore $\rho(\alpha)\geq0$. Thus, minimizing the limiting error norm is equivalent to minimizing $\rho(\alpha)$. Due to time constraints on this project, we leave this idea for future work but provide a brief discussion in Section~\ref{sec:invmoment} as to why calculating the inverse moments is more challenging compared to the OLS case.
+Our final obstacle then comes from giving a closed-form expression for the limiting spectral distributions of the above matrices. The proof of Lemma~3.2 (specifically, sub-Lemma~A.1) by \citet{Lacotte:2020} that derives closed-form expressions for the inverse moments of the limiting spectral distribution of $\bfU^\T\bfS_i^\T\bfS_i\bfU$ does not work for the ridge regression case as the proof again relies on embedding $\bfS_i\bfU$ into a Haar matrix. A different approach would be necessary and we leave this for future work due to time constraints on this project.
+\\
+
+Assuming that the singular values $\sigma_i$ of $\bfX$ along with their inverses $\sigma_i^{-1}$ are bounded as $n\rightarrow\infty$, the limiting spectral distribution of $\bfQ_i$ exists when it exists for $\bfU^\T\bfS_i^\T\bfS_i\bfU$. Hypothetically, \textit{if constant closed-form expressions of the limiting traces could be derived}, then the next step would be to minimize $\lim_{n\rightarrow\infty}\E\left[\|\Delta_{t+1}\|^2\right] = \rho(\alpha)^{t+1}$ as a function of constant step size $\alpha$. Note that $\rho(\alpha)$ is quadratic and convex in $\alpha$. Furthermore, because $\bfQ_i^\T\bfQ_i$ is positive semidefinite, its trace is non-negative and therefore $\rho(\alpha)\geq0$. Thus, minimizing the limiting error norm is equivalent to minimizing $\rho(\alpha)$. Doing so leads to a step size $\alpha$ that is asymptotically optimal (under our assumptions) for a ridge regression solver with partial Newton sketch updates.
+
 
 \subsubsection{Full column rank assumption} \label{sec:fullrank}
 
-\subsubsection{Inverse moments} \label{sec:invmoment}
+We revisit the full rank data matrix assumption (Assumption~\ref{asp:rank}) and consider the implications if it were relaxed. As mentioned, requiring the data matrix to have full column rank is not ideal for ridge regression as one possible reason for using it over OLS is to enforce an unique solution when the data matrix is not full rank. The assumption is made by \citet{Lacotte:2020} and in our analysis following theirs so that the singular values of $\bfX$ are positive and therefore $\Sigma$ is invertible. This allows for factorizing out $\Sigma$ from the matrix product containing the random matrix, and the remaining product $\bfU^\T\bfS_0^\T\bfS_0\bfU$ then has properties that \citet{Lacotte:2020} exploit. In the ridge regression case, factorizing out $\Sigma$ does not appear to lead to a particularly convenient form and so we explore the consequences of not doing so.
+\\
+
+Using the original identities
+\begin{align*}
+\bfX^\T\bfX+\lambda\bfI_d &= \bfV\left(\Sigma^2+ \lambda\bfI_d\right)\bfV^\T \;, \\
+\left(\bfX^\T\bfS_t^\T\bfS_t\bfX + \lambda\bfI_d\right)^{-1} &= \bfV\left(\Sigma\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\bfV^\T \;,
+\end{align*}
+we obtain an update of the form
+\[
+\bfb_{t+1} = \bfb_t - \alpha_t\bfV\left(\Sigma\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\left(\Sigma^2 + \lambda\bfI_d \right)\bfV^\T\left(\bfb_t-\bfb^*\right) \;.
+\]
+Notice that multiplying both sides by $\bfV^\T$ gives
+\[
+\bfV^\T\bfb_{t+1} = \bfV^\T\bfb_t - \alpha_t\left(\Sigma\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\left(\Sigma^2 + \lambda\bfI_d \right)\bfV^\T\left(\bfb_t-\bfb^*\right)
+\]
+and then subtracting both sides by $\bfV^\T\bfb^*$ gives
+\begin{align*}
+\bfV^\T(\bfb_{t+1}-\bfb^*) &= \bfV^\T(\bfb_t-\bfb^*) - \alpha_t\left(\Sigma\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\left(\Sigma^2 + \lambda\bfI_d \right)\bfV^\T\left(\bfb_t-\bfb^*\right) \\
+&= \left(\bfI_d - \alpha_t\left(\Sigma\bfU^\T\bfS_t^\T\bfS_t\bfU\Sigma + \lambda\bfI_d\right)^{-1}\left(\Sigma^2 + \lambda\bfI_d \right)\right)\bfV^\T\left(\bfb_t-\bfb^*\right) \;.
+\end{align*}
+This form is potentially interesting as we can initiate an analysis similar to the original approach but with the error vector instead defined as $\Delta_t=\bfV^\T(\bfb_t-\bfb^*)$, i.e., as some projection of the solution error as opposed to some projection of the prediction error. Following the steps in the original approach, under Assumption~\ref{asp:initialization}, we again arrive at
+\[
+\E\left[\|\Delta_{t+1}\|^2\right] = \frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_1^\T\ldots \bfQ_t^\T\bfQ_t\ldots\bfQ_0\bfQ_0^\T\right]\right)
+\]
+where now $\bfQ_i = \bfI_d-\alpha_i\left(\Sigma\bfU^\T\bfS_i^\T\bfS_i\bfU\Sigma + \lambda\bfI_d\right)^{-1}\left(\Sigma^2 + \lambda\bfI_d \right)$. Here, we run into the same challenges with applying results from free probability as in the first approach. While the matrix $\Sigma\bfU^\T\bfS_i^\T\bfS_i\bfU\Sigma$ may appear more complicated to work with than $\bfU^\T\bfS_i^\T\bfS_i\bfU$ in the first approach, its structure has been studied in the free probability literature. For example, Theorem~4.11 of \citep{Couillet:2011_free} says that for a matrix of the form
+\[
+\bfD^\frac{1}{2}\bfW\bfT\bfW^\T\bfD^\frac{1}{2}
+\]
+where $\bfD$ and $\bfT$ are diagonal non-negative matrives and $\bfW$ is a Haar matrix, the $\eta$-transform of the limiting spectral distribution exists and satisfies a certain set of equations. We can obtain the form specified in this result by diagonalizing $\bfS_i^\T\bfS_i$. While this particular result does not help with discerning asymptotic freeness, it does show that such matrix structure have been considered in the literature and that it may have some properties that are potentially useful for freeness.
 
 
 \subsection{Empirical experiments} \label{sec:empirical}
@@ -220,5 +264,10 @@ Our final obstacle then comes from giving a closed-form expression for the limit
 
 \subsection{Discussion} \label{sec:conclusion}
 
-\todo reliance on refreshed
+In this project, we showed that extending the analysis of \citet{Lacotte:2020} for OLS with IHS to ridge regression with partial Newton sketch is not trivial. The main challenges in attempting to do so come from not being able to directly apply existing results from free probability and random matrix theory to the matrices obtained from the ridge regression updates that are analogous to the ones in the OLS updates. Under certain assumptions and a number of hypothetical conditions, we outlined a procedure to derive the optimal convergence rate and corresponding step size for sketched ridge regression. We examined the full column rank data matrix assumption and showed that relaxing this assumption may lead to a similar analysis but with a different criterion (in terms of the solution error).\todo: also verified some of these conditions empirically?
+\\
 
+One thing to note is that the partial Newton sketch algorithm we considered in this project uses refreshed sketches, i.e., sketching matrices that are resampled every iteration. Results addressing the asymptotic freeness of matrices would not apply to fixed sketches due to the matrices no longer being independent, and thus an analysis based on free probability would likely be unsuitable for the fixed sketch case. Empirical results from \citet{Chowdhury:2018} do suggest that refreshed sketches enable faster convergence than fixed sketches for ridge regression (in at least one context), and so the fixed sketch case may not be particularly interesting anyways.
+\\
+
+Due to the time constraints on this project, there is much work left incomplete and a number of possible directions for future work. One direction is to complete the analysis and verify the asymptotic freeness of the matrices in the proof, as well as to determine whether closed-form expressions of the inverse moments are possible. It may also be of interest to explore whether this analysis approach can be used for other sketch-based methods, though our impression is that given the current state of the free probability and random matrix theory literature, there will only be a narrow set of methods and problems for which such an analysis may be applied. This seems to be the case as to our knowledge, there are only a handful of works~\citep{Dobriban:2019,Lacotte:2020,Lacotte:2020b} in the sketching literature that have used this analysis approach. However, free probability and random matrix theory seems to be an active area of research and so new developments may change this outlook.
