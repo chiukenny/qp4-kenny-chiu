@@ -6,7 +6,7 @@
 
 
 \begin{abstract}
-\todo
+The partial Newton sketch algorithm can be used as an approximate iterative solver for ridge regression. Following~\citet{Lacotte:2020}, we attempt to analyze the theoretical properties of partial Newton sketch for ridge regression using results from free probability and random matrix theory. We show that such an approach is not trivial and highlight the aspects of ridge regression that make doing so challenging. We make partial progress in the theory under a hypothetical trace decoupling condition and present some empirical evidence to support this hypothesis.
 \end{abstract}
 
 
@@ -20,10 +20,10 @@ While ridge regression can be motivated as a method for reducing overfitting in 
 \[
 \bfb^* = \left(\bfX^\T\bfX + \lambda\bfI_d\right)^{-1}\bfX^\T\bfy \;.
 \]
-In this report, we analyze the theoretical properties of a partial Newton sketch algorithm~\citep{Pilanci:2017} as an iterative solver for the ridge regression problem. In particular, we attempt to derive an optimal convergence rate and an optimal step size following the approach of \citet{Lacotte:2020} for iterative Hessian sketch with OLS using asymptotic results from random matrix theory and free probability. We show that while ridge regression can be considered a simple extension to OLS, extending the analysis approach of \citet{Lacotte:2020} to partial Newton sketch is not trivial. \todo
+In this report, we analyze the theoretical properties of a partial Newton sketch algorithm~\citep{Pilanci:2017} as an iterative solver for the ridge regression problem. In particular, we attempt to derive an optimal convergence rate and an optimal step size following the approach of \citet{Lacotte:2020} for iterative Hessian sketch with OLS using asymptotic results from random matrix theory and free probability. We show that while ridge regression can be considered a simple extension to OLS, extending the analysis approach of \citet{Lacotte:2020} to partial Newton sketch is not trivial.
 \\
 
-This report is organized as follows: Section~\ref{sec:background} provides background about sketching and describes the OLS results by \citet{Lacotte:2020} that we aim to extend to ridge regression; Section~\ref{sec:literature} highlights relevant work in the literature; Section~\ref{sec:theory} discusses our attempts to analyze Newton sketch for ridge regression and the key differences from OLS that makes the problem challenging; Section~\ref{sec:empirical} describes \todo; and Section~\ref{sec:conclusion} summarizes our findings and concludes this report.
+This report is organized as follows: Section~\ref{sec:background} provides background about sketching and describes the OLS results by \citet{Lacotte:2020} that we aim to extend to ridge regression; Section~\ref{sec:literature} highlights relevant work in the literature; Section~\ref{sec:theory} discusses our attempts to analyze Newton sketch for ridge regression and the key differences from OLS that makes the problem challenging; Section~\ref{sec:empirical} describes a simulation that empirically supports one of the hypothesized theoretical conditions; and Section~\ref{sec:conclusion} summarizes our findings and concludes this report.
 
 \subsection{Background} \label{sec:background}
 
@@ -48,7 +48,7 @@ For functions with an additive decomposition of the form $f=f_0+g$, it may be su
 \]
 In particular, the ridge regression loss function has this form where it is analytically more convenient to consider partial Newton sketch updates.
 
-\subsubsection{Random matrix theory and free probability}
+\subsubsection{Random matrix theory and free probability} \label{sec:freeprob}
 
 Free probability theory was initially developed by Voiculescu in the 1980's ~\citep{Anderson:2009} and is concerned with the study of non-commutative random variables. More recently, its connections to random matrix theory were established as a means of studying the limiting spectral distribution of random matrices. In free probability, the notion of freeness is analogous to independence in classical probability theory. A family of random $n\times n$ matrices $\{\bfX_n^{(1)},\ldots,\bfX_n^{(I)}\}$ is said to be asymptotically free~\citep{Couillet:2011_free} if
 \begin{enumerate}
@@ -256,15 +256,77 @@ where now $\bfQ_i = \bfI_d-\alpha_i\left(\Sigma\bfU^\T\bfS_i^\T\bfS_i\bfU\Sigma 
 \[
 \bfD^\frac{1}{2}\bfW\bfT\bfW^\T\bfD^\frac{1}{2}
 \]
-where $\bfD$ and $\bfT$ are diagonal non-negative matrives and $\bfW$ is a Haar matrix, the $\eta$-transform of the limiting spectral distribution exists and satisfies a certain set of equations. We can obtain the form specified in this result by diagonalizing $\bfS_i^\T\bfS_i$. While this particular result does not help with discerning asymptotic freeness, it does show that such matrix structure have been considered in the literature and that it may have some properties that are potentially useful for freeness.
+where $\bfD$ and $\bfT$ are diagonal non-negative matrives and $\bfW$ is a Haar matrix, the $\eta$-transform of the limiting spectral distribution exists and satisfies a certain set of equations. We can obtain the form specified in this result by diagonalizing $\bfS_i^\T\bfS_i$. While this particular result does not help with discerning asymptotic freeness, it does show that such matrix structure has been considered in the literature and that it may have further properties that could potentially be useful.
 
 
 \subsection{Empirical experiments} \label{sec:empirical}
 
+In Section~\ref{sec:theory}, we were unable to prove that asymptotic freeness holds for $\bfQ_1^\T\ldots\bfQ_t^\T\bfQ_t\ldots\bfQ_1$ where $\bfQ_i=\bfI_d - \alpha_i\left(\bfU^\T\bfS_i^\T\bfS_i\bfU + \lambda\Sigma^{-2}\right)^{-1}\left(\bfI_d + \lambda\Sigma^{-2}\right)$. In this section, we at least empirically investigate the trace decoupling property mentioned in Section~\ref{sec:freeprob} through a simple study where we examine the error
+\[
+\delta(n,\xi) = \frac{1}{d}\mathrm{trace}\left(\E\left[\bfQ_1^\T\bfQ_2^\T\bfQ_3^\T\bfQ_3\bfQ_2\bfQ_1\right]\right) - \frac{1}{d^3}\prod_{i=1}^3\mathrm{trace}\left(\E\left[\bfQ_i^\T\bfQ_i\right]\right)
+\]
+and how it changes as $n,d$ and $m$ grow proportionally according to fixed ratios $\gamma=\frac{d}{n}$ and $\xi=\frac{m}{n}$.
+\\
+
+We take $\gamma=0.05$ and consider two values of $\xi\in\{0.1,0.2\}$ in our study. We take $\bfX$ to be a $n\times d$ matrix of \iid standard Gaussians where $n\in\{256,512,1024,2048\}$ (corresponding to $n=2^p$ for $p\in\{8,\ldots,11\}$) and $d=\left\lceil{\gamma n}\right\rceil$. For $m=\left\lceil{\xi n}\right\rceil$, we take $\bfS_i$ to be refreshed $m\times n$ sketching matrices of one of the following types:
+\begin{enumerate}
+\item
+\iid Gaussian: entries are \iid Gaussian random variables with mean 0 and variance $m^{-1}$.
+\item
+Haar: entries are generated by sampling \iid standard Gaussian random variables and then applying the Gram-Schmidt procedure to obtain a semi-orthogonal matrix.
+\item
+Subsampled randomized Hadamard transform (SRHT) \citep{Lacotte:2020}: the matrix $\bfS_i$ is not formed explicitly. Instead, the left singular vectors $\bfU$ of $\bfX$ are transformed through the map $\bfU\mapsto \bfB\bfH_n\bfD\bfP\bfU$ where $\bfP$ is a random permutation matrix, $\bfD$ is a diagonal matrix with Rademacher random variables on the diagonal, $\bfH_n$ is the $n\times n$ Walsh-Hadamard matrix, and $\bfB$ is a diagonal matrix with Bernoulli$\left(\frac{m}{n}\right)$ on the diagonal. The rows of the output matrix corresponding to the zero rows of $\bfB$ are discarded and so the sketch $\bfS_i\bfU$ is only approximately a $m\times n$ matrix.
+\end{enumerate}
+We set $\lambda=0.1$. As we were also unable to determine the optimal step sizes $\alpha_i$ in Section~\ref{sec:theory}, for convenience we use the constant step size
+\[
+\alpha= \frac{(\xi-\gamma)^2}{\gamma^2+\xi-2\gamma\xi}
+\]
+which is the optimal (asymptotic) step size for IHS with refreshed orthogonal sketches~\citep{Lacotte:2020}. This corresponds to step sizes of $\alpha\approx0.027$ for $\xi=0.1$ and $\alpha\approx0.123$ for $\xi=0.2$.
+\\
+
+Figure~\ref{fig:rmse} shows the estimated root mean squared error (RMSE) for each of the three sketch types where the squared error $\delta(n,\xi)^2$ is averaged over 50 independent simulations for each configuration of $n$ and $\xi$. In all configurations, the RMSE appears to converge to 0 as the dimensions grow which supports the trace decoupling hypothesis. For smaller $n$, the orthogonal sketches have larger RMSE compared to the \iid Gaussian sketches, though their RMSE appear to decrease more rapidly on average than that of the \iid Gaussian sketches. An interesting note is that the sketch ratio $\xi$ does not seem affect the RMSE for \iid Gaussian sketches, though a larger sketch size does significantly decrease the RMSE for orthogonal sketches.
+
+\begin{figure}[ht]
+\centering
+\begin{minipage}[c]{0.21\textwidth}
+\vspace{2em}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.76\textwidth}
+\hfill $\xi=0.1$ \qquad\qquad\; \hfill $\xi=0.2$ \qquad\qquad\; \hfill
+\end{minipage} \\
+\begin{minipage}[c]{0.21\textwidth}
+\hfill \textbf{\iid Gaussian}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.76\textwidth}
+\includegraphics{images/rmse_sketchgaussian_xi0.1.png}
+\includegraphics{images/rmse_sketchgaussian_xi0.2.png}
+\end{minipage} \\
+\begin{minipage}[c]{0.21\textwidth}
+\hfill \textbf{Haar}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.76\textwidth}
+\includegraphics{images/rmse_sketchhaar_xi0.1.png}
+\includegraphics{images/rmse_sketchhaar_xi0.2.png}
+\end{minipage} \\
+\begin{minipage}[c]{0.21\textwidth}
+\hfill \textbf{SRHT}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.76\textwidth}
+\includegraphics{images/rmse_sketchsrht_xi0.1.png}
+\includegraphics{images/rmse_sketchsrht_xi0.2.png}
+\end{minipage}
+\caption{The estimated RMSE and standard error for $\xi\in\{0.1,0.2\}$ and \iid Gaussian, Haar and SRHT sketches. The mean and standard error at each point is calculated over 50 independent simulations.}
+\label{fig:rmse}
+\end{figure}
+
 
 \subsection{Discussion} \label{sec:conclusion}
 
-In this project, we showed that extending the analysis of \citet{Lacotte:2020} for OLS with IHS to ridge regression with partial Newton sketch is not trivial. The main challenges in attempting to do so come from not being able to directly apply existing results from free probability and random matrix theory to the matrices obtained from the ridge regression updates that are analogous to the ones in the OLS updates. Under certain assumptions and a number of hypothetical conditions, we outlined a procedure to derive the optimal convergence rate and corresponding step size for sketched ridge regression. We examined the full column rank data matrix assumption and showed that relaxing this assumption may lead to a similar analysis but with a different criterion (in terms of the solution error).\todo: also verified some of these conditions empirically?
+In this project, we showed that extending the analysis of \citet{Lacotte:2020} for OLS with IHS to ridge regression with partial Newton sketch is not trivial. The main challenges in attempting to do so come from not being able to directly apply existing results from free probability and random matrix theory to the matrices obtained from the ridge regression updates that are analogous to the ones in the OLS updates. Under certain assumptions and a number of hypothetical conditions, we outlined a procedure to derive the optimal convergence rate and corresponding step size for sketched ridge regression. We examined the full column rank data matrix assumption and showed that relaxing this assumption may lead to a similar analysis but with a different criterion (in terms of the solution error). Through simulations, we empirically showed that the trace decoupling condition hypothesized in the theory appears to hold in at least one simple experimental setting. Though the simulation does not explore all parameters of potential interest (e.g., other values of $\gamma$, $\lambda$, etc.), the results do instill some optimism that the theory may hold.
 \\
 
 One thing to note is that the partial Newton sketch algorithm we considered in this project uses refreshed sketches, i.e., sketching matrices that are resampled every iteration. Results addressing the asymptotic freeness of matrices would not apply to fixed sketches due to the matrices no longer being independent, and thus an analysis based on free probability would likely be unsuitable for the fixed sketch case. Empirical results from \citet{Chowdhury:2018} do suggest that refreshed sketches enable faster convergence than fixed sketches for ridge regression (in at least one context), and so the fixed sketch case may not be particularly interesting anyways.

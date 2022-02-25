@@ -1,3 +1,8 @@
+## Feb. 24
+
+* Updated code to run faster and ran simulations.
+* Completed first draft of report.
+
 ## Feb. 21-22
 
 * Added background and conclusion to report.
