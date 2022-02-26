@@ -1,3 +1,1 @@
-report goes here.
-
-compile main.tex to generate the report
+This directory contains the report and its source files.

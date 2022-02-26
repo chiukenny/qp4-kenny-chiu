@@ -1,1 +1,1 @@
-references go here
+This directory contains the BibTeX file for the report.

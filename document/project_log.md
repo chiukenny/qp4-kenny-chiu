@@ -1,6 +1,11 @@
+## Feb. 26
+
+* Made final edits to report.
+* Cleaned up code and repository.
+
 ## Feb. 25
 
-* Complete project report. Need to review proposal and clean up code/repository.
+* Completed project report. Need to review proposal and clean up code/repository.
 
 ## Feb. 24
 

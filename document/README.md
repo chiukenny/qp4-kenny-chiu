@@ -1,1 +1,1 @@
-documents I write go here
+This directory contains log files for tracking progress over the course of the project.
