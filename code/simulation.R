@@ -1,33 +1,49 @@
-sims = 50
-ps = 8:11
-
-gamma = 0.05
-xi = 0.1
-lambda = 0.1
-
-sketch = "haar"
-num_Q = 3
-
-save_plot = T
+# This file contains the R code used to generate the plots shown
+# in the simulation section of the report.
+# Only the parameters in the following section should be modified
+# when running this file.
+# ---------------------------------------------------------
 
 
+# Simulation and configuration parameters
+# ---------------------------------------------------------
+# Simulation parameters
+ps = 8:11      # Vector of integers p that determines sizes n=2^p to simulate
+sims = 50      # Number of simulations to compute RMSE/SE over at each point
+save_plot = F  # Save output plots (T/F)
+
+# Configuration parameters
+gamma = 0.05  # Ratio d/n
+xi = 0.1      # Ratio m/n
+lambda = 0.1  # Regularization penalty 
+
+sketch = "haar"  # Sketch type: one of {"haar","srht","gaussian"}
+num_Q = 3        # Number of matrices to decouple (number of iterations in algorithm)
+
+
+# Initialization
+# ---------------------------------------------------------
 library(tidyverse)
 source("functions.R")
 
 set.seed(1)
 
-S_COLS = list("srht"="blue",
-              "haar"="darkgreen",
-              "gaussian"="red")
+# Set colours for plotting
+S_COLS = list("srht"="blue", "haar"="darkgreen", "gaussian"="red")
 
+# Calculate IHS-optimal step size for convenience
 inv_mom_1 = (1-gamma)/(xi-gamma)
 inv_mom_2 = (1-gamma)*(gamma^2+xi-2*gamma*xi)/(xi-gamma)^3
 a = inv_mom_1 / inv_mom_2
 
 
+# Simulation
+# ---------------------------------------------------------
+# Initialize matrices to hold computed traces
 trace_QQ = matrix(0, sims, length(ps))
 trace_Q_Q = matrix(1, sims, length(ps))
-system.time({
+
+# Run simulation
 for (j in 1:length(ps))
 {
   p = ps[j]
@@ -56,7 +72,6 @@ for (j in 1:length(ps))
     trace_QQ[i,j] = sum(Qs^2) / d
   }
 }
-})
 
 trace_err = trace_QQ - trace_Q_Q
 rmse = sqrt(colMeans(trace_err^2))

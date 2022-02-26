@@ -1,3 +1,7 @@
+## Feb. 25
+
+* Complete project report. Need to review proposal and clean up code/repository.
+
 ## Feb. 24
 
 * Updated code to run faster and ran simulations.

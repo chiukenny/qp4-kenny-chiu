@@ -5,10 +5,9 @@
 \section{Mini-proposals}
 
 % each mini-proposal gets its own subsection
-\subsection[A sketched interior point algorithm for quantile regression]{Proposal 1: A sketched interior point algorithm for quantile regression} % enter your proposal title
+\subsection*{A sketched interior point algorithm for quantile regression} % enter your proposal title
 
-%Whereas linear regression fits a linear model on the conditional mean, quantile regression~\citep{Koenker:1978} fits a linear model on a conditional quantile.
-Quantile regression~\citep{Koenker:1978} offers several advantages over linear regression, such as being able to model different quantiles (as opposed to only a mean), being free from assumptions regarding the parametric form of the response and homoscedasticity, and being transformation equivariant in its response~\citep{Rodriguez:2017}. Given a data matrix $\bfX\in\bbR^{n\times d}$, observations $\bfy\in\bbR^{n}$ and a quantile $\tau\in(0,1)$, quantile regression fits a linear model on the quantile with the estimated parameters being the solution to the optimization problem
+Quantile regression~\citep{Koenker:1978} offers several advantages over linear regression, such as being able to model different quantiles (as opposed to only a mean), being free from assumptions regarding the parametric form of the response and homoscedasticity, and being transformation equivariant in its response~\citep{Rodriguez:2017}. Given a data matrix $\bfX\in\bbR^{n\times d}$, responses $\bfy\in\bbR^{n}$ and a quantile $\tau\in(0,1)$, quantile regression fits a linear model on the conditional quantile with the estimated parameters being the solution to the optimization problem
 \[
 \min_{\bfb\in\bbR^d} \; \sum_{i=1}^n(y_i-\bfx_i^\T\bfb)\left(\tau - \mathbbm{1}[y_i-\bfx_i^\top\bfb < 0]\right) \;.
 \]
@@ -24,7 +23,7 @@ The interior point method solves the dual program by taking a sequence of Newton
 \[
 \bfX^\T\bfW_t\bfX\bfb_t = \bfX^\T\bfW_t\left(\bfy+\mu\bfA^{-1}\onevec_n\right) \;.
 \]
-where $\bfA$ is a $n\times n$ diagonal matrix and $\bfW_t$ is a $n\times n$ diagonal matrix with positive diagonal entries that changes each iteration. Computing $\bfX^\T\bfW_t\bfX$ is the main computational bottleneck that leads to each iteration having a cost of $O(nd^2)$~\citep{Chen:2005}.
+where $\bfA$ is a $n\times n$ diagonal matrix and $\bfW_t$ is a $n\times n$ diagonal matrix with positive diagonal entries that update every iteration. Computing $\bfX^\T\bfW_t\bfX$ is the main computational bottleneck that leads to each iteration having a cost of $O(nd^2)$~\citep{Chen:2005}.
 \\
 
 In this proposed project, we consider the case where $d\ll n$ and propose a stochastic interior point algorithm that uses sketching matrices to reduce the cost of the iterative updates. Drawing on methods from the sketching literature~\cite{Pilanci:2017}, the idea is to incorporate partial sketching into the original algorithm where instead of computing $\bfX^\T\bfW_t\bfX$, we compute $\bfX^\T\bfW_t^\frac{1}{2}\bfS_t^\T\bfS_t\bfW_t^\frac{1}{2}\bfX$.
@@ -38,12 +37,12 @@ A sketched interior point algorithm for optimizing quantile regression problems 
 \item
 A theoretical analysis of the proposed sketched interior point algorithm that provides convergence guarantees.
 \item
-An empirical comparison of quantile regression models obtained from the proposed sketched algorithm and other existing methods, such as the standard interior point method~\citep{Portnoy:1997} (implemented in R), the stochastic method by \citet{Yang:2013}, a more modern iteration of the interior point method~\citep{Zhao:2020}, and a modern quantile regression algorithm based on smoothing~\citep{He:2021} (also implemented in R), in large dataset settings.
+An empirical comparison of the proposed sketching algorithm and other existing methods for quantile regression, such as the standard interior point method~\citep{Portnoy:1997} (implemented in R), the stochastic method by \citet{Yang:2013}, a more modern iteration of the interior point method~\citep{Zhao:2020}, and a modern quantile regression algorithm based on smoothing~\citep{He:2021} (also implemented in R).
 \item
 An implemention of the sketch interior point algorithm, e.g., in R, if found to have practical advantages over the existing algorithms.
 \end{enumerate}
 
-The main challenge in this project would be the theoretical analysis of the sketched interior point algorithm. The most feasible analysis approach would likely be following that of \citet{Pilanci:2017} for interior point methods and partial sketches, which would provide a worst-case convergence guarantee for the number of iterations needed to obtain a solution within a desired tolerance. The effect of the sketching matrix may also be of interest, but an analysis approach similar to the asymptotic approach of \citet{Lacotte:2020} would likely be necessary. However, adapting their least squares approach to that of quantile regression is not straightforward and would likely be more suited for a follow-up project.
+The main challenge in this project would be the theoretical analysis of the sketched interior point algorithm. The most feasible analysis approach would likely be following that of \citet{Pilanci:2017} for interior point methods and partial sketches, which would provide a worst-case convergence guarantee for the number of iterations needed to obtain a solution within a desired tolerance. Understanding the effects of different sketching matrices may also be of interest, but an analysis approach remnant to that of \citet{Lacotte:2020} would likely be necessary. However, adapting their asymptotic approach to that of quantile regression is not straightforward and would likely be more suited for a follow-up project.
 \\
 
 Following the completion of this project, there are multiple directions of future work that may be of interest:
@@ -53,7 +52,7 @@ The proposed sketched interior point algorithm would not be useful for the $n\ll
 \item
 Applications of quantile regression or interior point algorithms in general, e.g., composite quantile regression~\citep{Zou:2008} for high-dimensional regression, applications of quadratic progamming, may benefit from the faster algorithm.
 \item
-Sketched-based smoothing algorithms for quantile regression. These algorithms approximate the original optimization problem by a differentiable one and therefore sketching should directly follow from the work of \citet{Pilanci:2017}. Given the more standard setup, it is likely easier to analyze these algorithms than the interior point algorithms.
+Sketch-based smoothing algorithms for quantile regression. These algorithms approximate the original optimization problem by a differentiable one and therefore sketching should directly follow from the work of \citet{Pilanci:2017}. Given the more standard setup, it would likely be easier to analyze these algorithms than the interior point algorithms.
 \end{enumerate}
 
 \iffalse
