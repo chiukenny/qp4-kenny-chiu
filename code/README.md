@@ -1,1 +1,1 @@
-code goes here
+This directory contains the R code used in the project.
